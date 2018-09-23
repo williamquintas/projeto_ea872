@@ -58,7 +58,7 @@ class Fisica {
     Fisica(ListaDeNaves *ldn, ListaDeTiros *ldt);
     void add_nave(Nave *n);
     void add_tiro(Tiro *t);
-    void andar_nave();
+    void andar_nave(int deslocamento);
     void update_tiro(float deltaT);
 };
 

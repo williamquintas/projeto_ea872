@@ -24,7 +24,6 @@ int main () {
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
 
-
   Fisica *f = new Fisica(n_lista, t_lista);
 
 
@@ -61,9 +60,12 @@ int main () {
     if (c=='q') {
       break;
     }
-
-    // Condicao de parada
-    if ( (t1-T) > 10000 ) break;
+    if (c=='s') {
+      f->andar_nave(1);
+    }
+    if (c=='w') {
+      f->andar_nave(-1);
+    }
 
     std::this_thread::sleep_for (std::chrono::milliseconds(100));
     i++;
