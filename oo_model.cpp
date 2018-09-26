@@ -7,6 +7,14 @@
 
 #include <ncurses.h>
 
+#define VELOCIDADE_TIRO 3
+#define ACELERACAO_TIRO 3
+#define ALTURA_TELA 20
+#define LARGURA_TELA 40
+#define POSICAO_X_NAVE 3
+
+int total_tiros = 0;
+
 using namespace std::chrono;
 
 //Nave
@@ -23,10 +31,11 @@ float Nave::get_posicao() {
 }
 
 //Tiro
-Tiro::Tiro(float posicao_x, float posicao_y, float velocidade) {
+Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, int existe) {
   this->posicao_x = posicao_x;
   this->posicao_y = posicao_y;
   this->velocidade = velocidade;
+  this->existe = existe;
 }
 
 float Tiro::get_posicao_x() {
@@ -41,8 +50,17 @@ float Tiro::get_velocidade() {
   return this->velocidade;
 }
 
-void Tiro::update(float nova_posicao_x, float nova_velocidade) {
+int Tiro::get_existe() {
+  return this->existe;
+}
+
+void Tiro::update_existe(int e) {
+  this->existe = e;
+}
+
+void Tiro::update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade) {
   this->posicao_x = nova_posicao_x;
+  this->posicao_y = nova_posicao_y;
   this->velocidade = nova_velocidade;
 }
 
@@ -68,7 +86,6 @@ std::vector<Nave*> *ListaDeNaves::get_naves() {
 }
 
 
-
 //Lista de Tiros
 ListaDeTiros::ListaDeTiros() {
   this->tiros = new std::vector<Tiro *>(0);
@@ -78,7 +95,10 @@ void ListaDeTiros::hard_copy(ListaDeTiros *ldt) {
   std::vector<Tiro *> *tiros = ldt->get_tiros();
 
   for (int k=0; k<tiros->size(); k++) {
-    Tiro *t = new Tiro( (*tiros)[k]->get_posicao_x(), (*tiros)[k]->get_posicao_y(),  (*tiros)[k]->get_velocidade());
+    Tiro *t = new Tiro( (*tiros)[k]->get_posicao_x(), 
+                        (*tiros)[k]->get_posicao_y(), 
+                        (*tiros)[k]->get_velocidade(), 
+                        (*tiros)[k]->get_existe()     );
     this->add_tiro(t);
   }
 
@@ -94,9 +114,6 @@ std::vector<Tiro*> *ListaDeTiros::get_tiros() {
 
 
 //Fisica
-int const ALTURA_TELA = 20;
-int const LARGURA_TELA = 40;
-
 Fisica::Fisica(ListaDeNaves *ldn, ListaDeTiros *ldt) {
   this->lista_nave = ldn;
   this->lista_tiro = ldt;
@@ -109,14 +126,28 @@ void Fisica::andar_nave(int deslocamento) {
   }
 }
 
-int const aceleracao_tiros = 3;
+
+void Fisica::disparar_tiro(int i_tiro){
+  total_tiros++;
+  std::vector<Nave *> *n = this->lista_nave->get_naves();
+  std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
+  (*t)[i_tiro]->update_existe(1);
+  (*t)[i_tiro]->update(POSICAO_X_NAVE+2, (*n)[0]->get_posicao(), VELOCIDADE_TIRO);
+}
+
+void Fisica::destruir_tiro(int i_tiro){
+  std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
+  (*t)[i_tiro]->update_existe(0);
+}
+
+
 void Fisica::update_tiro(float deltaT) {
   // Atualiza parametros dos tiros!
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   for (int i = 0; i < (*t).size(); i++) {
-    float new_vel = (*t)[i]->get_velocidade() + (float)deltaT * (aceleracao_tiros)/1000;
+    float new_vel = (*t)[i]->get_velocidade() + (float)deltaT * (ACELERACAO_TIRO)/1000;
     float new_pos = (*t)[i]->get_posicao_x() + (float)deltaT * new_vel/1000;
-    (*t)[i]->update(new_pos, new_vel);
+    (*t)[i]->update(new_pos, (*t)[i]->get_posicao_y(), new_vel);
   }
 }
 
@@ -148,12 +179,12 @@ void Tela::draw() {
     
     for (a=0; a<ALTURA_TELA; a++){
         l = 0;
-        //desenha | em l = 0
+        //desenha em l = 0
         move(a, l);
         echochar('+');
     }    
     for (l=0; l<LARGURA_TELA; l++){
-        //desenha -- em a = 0 e a = altura_tela
+        //desenha em a = 0 e a = altura_tela
         a = 0;
         move (a, l);
         echochar('+');
@@ -164,7 +195,7 @@ void Tela::draw() {
     } 
     for (a=0; a<ALTURA_TELA; a++){
         l = LARGURA_TELA;
-        //desenha | em l = largura_tela
+        //desenha em l = largura_tela
         move(a, l);
         echochar('+');
     }       
@@ -182,15 +213,16 @@ void Tela::update() {
   //altura = getmaxy(stdscr);
   //largura = getmaxx(stdscr);
 
-  std::vector<Tiro *> *tiros_old = this->lista_anterior_tiro->get_tiros();
   std::vector<Nave *> *naves_old = this->lista_anterior_nave->get_naves();
+
+  std::vector<Tiro *> *tiros_old = this->lista_anterior_tiro->get_tiros();
 
   // Apaga tiros na tela
   for (int k=0; k<tiros_old->size(); k++){
      y = (int) ((*tiros_old)[k]->get_posicao_y()) * (this->maxI / this->maxX);
      x = (int) ((*tiros_old)[k]->get_posicao_x()) * (this->maxI / this->maxX);
      move(y, x);   /* Move cursor to position */
-     if (x<LARGURA_TELA && x>0){//PODE ESTAR ERRADO AQUI
+     if (x<LARGURA_TELA && x>0){
          echochar(' ');  /* Prints character, advances a position */
      }
   }
@@ -199,41 +231,49 @@ void Tela::update() {
   std::vector<Tiro *> *tiros = this->lista_tiro->get_tiros();
 
   for (int k=0; k<tiros->size(); k++){
-     y = (int) ((*tiros)[k]->get_posicao_y()) * (this->maxI / this->maxX);
-     x = (int) ((*tiros)[k]->get_posicao_x()) * (this->maxI / this->maxX);
-     move(y, x);   /* Move cursor to position */
-     if (x<LARGURA_TELA && x>0){//PODE ESTAR ERRADO AQUI
-          echochar('*');  /* Prints character, advances a position */
-     }
+    if((*tiros)[k]->get_existe() == 1){
+       y = (int) ((*tiros)[k]->get_posicao_y()) * (this->maxI / this->maxX);
+       x = (int) ((*tiros)[k]->get_posicao_x()) * (this->maxI / this->maxX);
+       move(y, x);   /* Move cursor to position */
+         if (x<LARGURA_TELA && x>0){
+            echochar('*');  /* Prints character, advances a position */
+       }
 
-    // Atualiza tiros antigos
-    (*tiros_old)[k]->update((*tiros)[k]->get_posicao_x(), (*tiros)[k]->get_velocidade());
+      // Atualiza tiros antigos
+      (*tiros_old)[k]->update((*tiros)[k]->get_posicao_x(), (*tiros)[k]->get_posicao_y(), (*tiros)[k]->get_velocidade());
+    }
   }
 
-  // Apaga tiros na tela
+  // Apaga a nave na tela
   for (int k=0; k<naves_old->size(); k++){
      y = (int) ((*naves_old)[k]->get_posicao()) * (this->maxI / this->maxX);
-     x = 3;
+     x = POSICAO_X_NAVE;
      move(y, x);   /* Move cursor to position */
-     if (y<ALTURA_TELA && y>0){//PODE ESTAR ERRADO AQUI
+     if (y<ALTURA_TELA && y>0){
          echochar(' ');  /* Prints character, advances a position */
      }
   }
 
-  // Desenha tiros na tela
+  // Desenha a nave na tela
   std::vector<Nave *> *naves = this->lista_nave->get_naves();
 
   for (int k=0; k<naves->size(); k++){
      y = (int) ((*naves)[k]->get_posicao()) * (this->maxI / this->maxX);
-     x = 3;
+     x = POSICAO_X_NAVE;
      move(y, x);   /* Move cursor to position */
-     if (y<ALTURA_TELA && y>0){//PODE ESTAR ERRADO AQUI
+     if (y<ALTURA_TELA && y>0){
          echochar('>');  /* Prints character, advances a position */
      }
 
-    // Atualiza tiros antigos
+    // Atualiza a nave antiga
     (*naves_old)[k]->update((*naves)[k]->get_posicao());
   }
+ 
+
+  // Atualizando os pontos e o restante de tiros
+  int out_tiros = tiros->size()-total_tiros;
+  move(ALTURA_TELA+1, 1);
+  printw("%d Tiros e Pontos:", out_tiros);
 
   // Atualiza tela
   refresh();

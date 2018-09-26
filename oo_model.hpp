@@ -18,13 +18,16 @@ class Tiro {
   float posicao_x;
   float posicao_y;
   float velocidade;
+  int existe; //0 se nao existe e 1 se existe o tiro
 
   public:
-  Tiro(float posicao_x, float posicao_y, float velocidade);
+  Tiro(float posicao_x, float posicao_y, float velocidade, int existe);
   float get_posicao_x();
   float get_posicao_y();
   float get_velocidade();
-  void update(float nova_posicao_x, float nova_velocidade);
+  int get_existe();
+  void update_existe(int e);
+  void update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade);
 };
 
 class ListaDeNaves {
@@ -59,7 +62,9 @@ class Fisica {
     void add_nave(Nave *n);
     void add_tiro(Tiro *t);
     void andar_nave(int deslocamento);
+    void disparar_tiro(int i_tiro);
     void update_tiro(float deltaT);
+    void destruir_tiro(int i_tiro);
 };
 
 class Tela {

@@ -5,24 +5,27 @@
 
 #include "oo_model.hpp"
 
+#define MAX_TIROS 51
+
 using namespace std::chrono;
 uint64_t get_now_ms() {
   return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
 }
 
 int main () {
-  Tiro *tiro1 = new Tiro(4, 10, 6);
-  Tiro *tiro2 = new Tiro(4, 12, 7);
-  Tiro *tiro3 = new Tiro(4, 14, 8);
 
+  //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
-  t_lista->add_tiro(tiro1);
-  t_lista->add_tiro(tiro2);
-  t_lista->add_tiro(tiro3);
+  for (int k=1; k<MAX_TIROS; k++){
+    Tiro *tiro = new Tiro(0, 0, 0, 0);
+    t_lista->add_tiro(tiro);
+  }
 
+  //Criando a Nave
   Nave *nave1 = new Nave(1);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
+
 
   Fisica *f = new Fisica(n_lista, t_lista);
 
@@ -39,10 +42,11 @@ int main () {
   uint64_t deltaT;
   uint64_t T;
 
-  int i = 0;
+  int n_tiro = 0;
 
   T = get_now_ms();
   t1 = T;
+
   while (1) {
     // Atualiza timers
     t0 = t1;
@@ -66,9 +70,15 @@ int main () {
     if (c=='w') {
       f->andar_nave(-1);
     }
+    if (c=='t') {
+      if (n_tiro+1 == MAX_TIROS){
+        break;
+      }
+      f->disparar_tiro(n_tiro);
+      n_tiro++;
+    }
 
     std::this_thread::sleep_for (std::chrono::milliseconds(100));
-    i++;
   }
   tela->stop();
   teclado->stop();
