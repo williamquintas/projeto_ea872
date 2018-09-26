@@ -301,6 +301,17 @@ Fisica::Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt) {
   this->alvo = alvo;
   this->lista_nave = ldn;
   this->lista_tiro = ldt;
+  this->asample = new Audio::Sample();
+  this->asample->load("assets/explosion.dat");
+  this->player = new Audio::Player();
+  this->player->init();
+  //Espera
+  while (1) {
+    int t1, t0;
+    std::this_thread::sleep_for (std::chrono::milliseconds(1));
+    t1 = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
+    if (t1-t0 > 500) break;
+  }
 }
 
 void Fisica::andar_nave(int deslocamento) {
@@ -322,6 +333,8 @@ void Fisica::disparar_tiro(int i_tiro){
 void Fisica::destruir_tiro(int i_tiro){
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   (*t)[i_tiro]->update_existe(0);
+  this->asample->set_position(0);
+  this->player->play(this->asample);    
 }
 
 
@@ -331,7 +344,6 @@ void Fisica::update_tiro(float deltaT) {
   for (int i = 0; i < (*t).size(); i++) {
     float new_vel = (*t)[i]->get_velocidade() + (float)deltaT * (ACELERACAO_TIRO)/1000;
     float new_pos = (*t)[i]->get_posicao_x() + (float)deltaT * new_vel/1000;
-    // std::cout << (int) new_pos << '\n' << (int) this->alvo->get_posicao_x() << '\n' << (int) (*t)[i]-> get_posicao_y() << '\n' << (int) this->alvo->get_posicao_y();
     if (
       new_pos <= this->alvo->get_posicao_x() + 0.5 && 
       new_pos >= this->alvo->get_posicao_x() - 0.5 && 

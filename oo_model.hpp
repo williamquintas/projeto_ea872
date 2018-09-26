@@ -113,6 +113,8 @@ class Fisica {
     Alvo *alvo;
     ListaDeNaves *lista_nave;
     ListaDeTiros *lista_tiro;
+    Audio::Player *player;
+    Audio::Sample *asample;
 
   public:
     Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt);

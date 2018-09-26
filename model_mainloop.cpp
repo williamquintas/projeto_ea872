@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>       /* time */
 
-#define MAX_TIROS 51
+#define MAX_TIROS 101
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 
