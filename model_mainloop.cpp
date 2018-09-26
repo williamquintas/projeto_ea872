@@ -5,7 +5,12 @@
 
 #include "oo_model.hpp"
 
+#include <stdlib.h>
+#include <time.h>       /* time */
+
 #define MAX_TIROS 51
+#define ALTURA_TELA 20
+#define LARGURA_TELA 40
 
 using namespace std::chrono;
 uint64_t get_now_ms() {
@@ -26,11 +31,14 @@ int main () {
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
 
+  //Criando o alvo
+  srand (time(NULL));
+  Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % ALTURA_TELA));
 
   Fisica *f = new Fisica(n_lista, t_lista);
 
 
-  Tela *tela = new Tela(n_lista, t_lista, 20, 20, 20, 20);
+  Tela *tela = new Tela(alvo, n_lista, t_lista, 20, 20, 20, 20);
   tela->init();
   tela->draw();
 

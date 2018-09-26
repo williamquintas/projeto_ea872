@@ -13,6 +13,18 @@ class Nave {
   void update(float nova_posicao);
 };
 
+class Alvo {
+  private:
+  float posicao_x;
+  float posicao_y;
+  
+  public:
+  Alvo(float posicao_x, float posicao_y);
+  float get_posicao_x();
+  float get_posicao_y();
+  void update(float nova_posicao_x, float nova_posicao_y);
+};
+
 class Tiro {
   private:
   float posicao_x;
@@ -69,13 +81,14 @@ class Fisica {
 
 class Tela {
   private:
+    Alvo *alvo, *alvo_antigo;
     ListaDeNaves *lista_nave, *lista_anterior_nave;
     ListaDeTiros *lista_tiro, *lista_anterior_tiro;
     int maxI, maxJ;
     float maxX, maxY;
 
   public:
-    Tela(ListaDeNaves *ldn, ListaDeTiros *ldt, int maxI, int maxJ, float maxX, float maxY);
+    Tela(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt, int maxI, int maxJ, float maxX, float maxY);
     ~Tela();
     void stop();
     void init();

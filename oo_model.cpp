@@ -30,6 +30,25 @@ float Nave::get_posicao() {
   return this->posicao;
 }
 
+//Alvo
+Alvo::Alvo(float posicao_x, float posicao_y){
+  this->posicao_x = posicao_x;
+  this->posicao_y = posicao_y;
+}
+
+float Alvo::get_posicao_x() {
+  return this->posicao_x;
+}
+
+float Alvo::get_posicao_y() {
+  return this->posicao_y;
+}
+
+void Alvo::update(float nova_posicao_x, float nova_posicao_y) {
+  this->posicao_x = nova_posicao_x;
+  this->posicao_y = nova_posicao_y;
+}
+
 //Tiro
 Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, int existe) {
   this->posicao_x = posicao_x;
@@ -152,7 +171,10 @@ void Fisica::update_tiro(float deltaT) {
 }
 
 //Tela
-Tela::Tela(ListaDeNaves *ldn, ListaDeTiros *ldt, int maxI, int maxJ, float maxX, float maxY) {
+Tela::Tela(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt, int maxI, int maxJ, float maxX, float maxY) {
+
+  this->alvo = alvo;
+  this->alvo_antigo = new Alvo(this->alvo->get_posicao_x(), this->alvo->get_posicao_y()); 
 
   this->lista_nave = ldn;
   this->lista_anterior_nave = new ListaDeNaves();
@@ -212,6 +234,26 @@ void Tela::update() {
   //int altura, largura;
   //altura = getmaxy(stdscr);
   //largura = getmaxx(stdscr);
+
+  //Apaga o Alvo antigo
+  Alvo *alvo_antigo = this->alvo_antigo;
+  y = (int) alvo_antigo->get_posicao_y() * (this->maxI / this->maxX);
+  x = (int) alvo_antigo->get_posicao_x();
+  move(y, x);   /* Move cursor to position */
+  if (y<ALTURA_TELA && y>0){
+      echochar(' ');  /* Prints character, advances a position */
+  }
+  // Desenha o alvo na tela
+  Alvo *alvo = this->alvo;
+  y = (int) alvo->get_posicao_y() * (this->maxI / this->maxX);
+  x = (int) alvo->get_posicao_x();
+  move(y, x);   /* Move cursor to position */
+  if (y<ALTURA_TELA && y>0){
+      echochar('O');  /* Prints character, advances a position */
+  }
+  // Atualiza o alvo antigo
+  alvo_antigo->update(alvo->get_posicao_x(), alvo->get_posicao_y());
+  
 
   std::vector<Nave *> *naves_old = this->lista_anterior_nave->get_naves();
 
@@ -273,7 +315,7 @@ void Tela::update() {
   // Atualizando os pontos e o restante de tiros
   int out_tiros = tiros->size()-total_tiros;
   move(ALTURA_TELA+1, 1);
-  printw("%d Tiros e Pontos:", out_tiros);
+  printw("%d Tiros Restantes / 0 Pontos", out_tiros);
 
   // Atualiza tela
   refresh();
