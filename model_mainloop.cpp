@@ -55,6 +55,21 @@ int main () {
   T = get_now_ms();
   t1 = T;
 
+  Audio::Sample *asample;
+  asample = new Audio::Sample();
+  asample->load("assets/gun.dat");
+
+  Audio::Player *player;
+  player = new Audio::Player();
+  player->init();
+
+  //Espera
+  while (1) {
+    std::this_thread::sleep_for (std::chrono::milliseconds(1));
+    t1 = get_now_ms();
+    if (t1-t0 > 500) break;
+  }
+
   while (1) {
     // Atualiza timers
     t0 = t1;
@@ -82,12 +97,15 @@ int main () {
       if (n_tiro+1 == MAX_TIROS){
         break;
       }
+      asample->set_position(0);
+      player->play(asample);
       f->disparar_tiro(n_tiro);
       n_tiro++;
     }
 
     std::this_thread::sleep_for (std::chrono::milliseconds(100));
   }
+  player->stop();
   tela->stop();
   teclado->stop();
   return 0;

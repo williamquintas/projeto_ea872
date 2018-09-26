@@ -1,4 +1,4 @@
-FLAGS=-lncurses -lpthread -std=c++11
+FLAGS=-lportaudio -lncurses -lpthread -std=c++11
 
 all: model
 
