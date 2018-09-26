@@ -35,7 +35,7 @@ int main () {
   srand (time(NULL));
   Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % ALTURA_TELA));
 
-  Fisica *f = new Fisica(n_lista, t_lista);
+  Fisica *f = new Fisica(alvo, n_lista, t_lista);
 
 
   Tela *tela = new Tela(alvo, n_lista, t_lista, 20, 20, 20, 20);

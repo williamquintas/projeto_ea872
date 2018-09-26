@@ -6,6 +6,8 @@
 #include "oo_model.hpp"
 
 #include <ncurses.h>
+#include <stdlib.h>
+#include <time.h>   
 
 #define VELOCIDADE_TIRO 3
 #define ACELERACAO_TIRO 3
@@ -14,6 +16,7 @@
 #define POSICAO_X_NAVE 3
 
 int total_tiros = 0;
+int pontos = 0;
 
 using namespace std::chrono;
 
@@ -31,7 +34,7 @@ float Nave::get_posicao() {
 }
 
 //Alvo
-Alvo::Alvo(float posicao_x, float posicao_y){
+Alvo::Alvo(float posicao_x, float posicao_y) {
   this->posicao_x = posicao_x;
   this->posicao_y = posicao_y;
 }
@@ -133,7 +136,8 @@ std::vector<Tiro*> *ListaDeTiros::get_tiros() {
 
 
 //Fisica
-Fisica::Fisica(ListaDeNaves *ldn, ListaDeTiros *ldt) {
+Fisica::Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt) {
+  this->alvo = alvo;
   this->lista_nave = ldn;
   this->lista_tiro = ldt;
 }
@@ -166,6 +170,18 @@ void Fisica::update_tiro(float deltaT) {
   for (int i = 0; i < (*t).size(); i++) {
     float new_vel = (*t)[i]->get_velocidade() + (float)deltaT * (ACELERACAO_TIRO)/1000;
     float new_pos = (*t)[i]->get_posicao_x() + (float)deltaT * new_vel/1000;
+    // std::cout << (int) new_pos << '\n' << (int) this->alvo->get_posicao_x() << '\n' << (int) (*t)[i]-> get_posicao_y() << '\n' << (int) this->alvo->get_posicao_y();
+    if (
+      new_pos <= this->alvo->get_posicao_x() + 0.5 && 
+      new_pos >= this->alvo->get_posicao_x() - 0.5 && 
+      (*t)[i]-> get_posicao_y() <= this->alvo->get_posicao_y() + 0.5 &&
+      (*t)[i]-> get_posicao_y() >= this->alvo->get_posicao_y() - 0.5
+      ) {
+        this->destruir_tiro(i);
+        srand (time(NULL));
+        this->alvo->update((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % (ALTURA_TELA - 1)) + 1.0);
+        pontos++;
+    }
     (*t)[i]->update(new_pos, (*t)[i]->get_posicao_y(), new_vel);
   }
 }
@@ -315,7 +331,7 @@ void Tela::update() {
   // Atualizando os pontos e o restante de tiros
   int out_tiros = tiros->size()-total_tiros;
   move(ALTURA_TELA+1, 1);
-  printw("%d Tiros Restantes / 0 Pontos", out_tiros);
+  printw("%d Tiros Restantes / %d Pontos", out_tiros, pontos);
 
   // Atualiza tela
   refresh();

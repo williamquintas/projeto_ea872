@@ -66,11 +66,12 @@ class ListaDeTiros {
 
 class Fisica {
   private:
+    Alvo *alvo;
     ListaDeNaves *lista_nave;
     ListaDeTiros *lista_tiro;
 
   public:
-    Fisica(ListaDeNaves *ldn, ListaDeTiros *ldt);
+    Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt);
     void add_nave(Nave *n);
     void add_tiro(Tiro *t);
     void andar_nave(int deslocamento);
