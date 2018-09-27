@@ -74,15 +74,15 @@ class Tiro {
   float posicao_x;
   float posicao_y;
   float velocidade;
-  int existe; //0 se nao existe e 1 se existe o tiro
+  bool existe; //0 se nao existe e 1 se existe o tiro
 
   public:
-  Tiro(float posicao_x, float posicao_y, float velocidade, int existe);
+  Tiro(float posicao_x, float posicao_y, float velocidade, bool existe);
   float get_posicao_x();
   float get_posicao_y();
   float get_velocidade();
-  int get_existe();
-  void update_existe(int e);
+  bool get_existe();
+  void update_existe(bool e);
   void update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade);
 };
 

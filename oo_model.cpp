@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <time.h>   
 
-#define VELOCIDADE_TIRO 3
-#define ACELERACAO_TIRO 3
+#define VELOCIDADE_TIRO 10
+#define ACELERACAO_TIRO 0
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 #define POSICAO_X_NAVE 3
@@ -214,7 +214,7 @@ void Alvo::update(float nova_posicao_x, float nova_posicao_y) {
 }
 
 //Tiro
-Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, int existe) {
+Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, bool existe) {
   this->posicao_x = posicao_x;
   this->posicao_y = posicao_y;
   this->velocidade = velocidade;
@@ -233,11 +233,11 @@ float Tiro::get_velocidade() {
   return this->velocidade;
 }
 
-int Tiro::get_existe() {
+bool Tiro::get_existe() {
   return this->existe;
 }
 
-void Tiro::update_existe(int e) {
+void Tiro::update_existe(bool e) {
   this->existe = e;
 }
 
@@ -504,7 +504,7 @@ void Tela::update() {
   // Atualizando os pontos e o restante de tiros
   int out_tiros = tiros->size()-total_tiros;
   move(ALTURA_TELA+1, 1);
-  printw("%d Tiros Restantes / %d Pontos", out_tiros, pontos);
+  printw("%d Tiros Restantes / %d Pontos ", out_tiros, pontos);
 
   // Atualiza tela
   refresh();
