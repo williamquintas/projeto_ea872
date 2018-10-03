@@ -1,6 +1,7 @@
 #ifndef OO_MODEL_HPP
 #define OO_MODEL_HPP
 
+#include <vector>
 #include <thread>
 #include "portaudio.h"
 
