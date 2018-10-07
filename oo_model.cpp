@@ -504,7 +504,7 @@ void Tela::update() {
   // Atualizando os pontos e o restante de tiros
   int out_tiros = tiros->size()-total_tiros;
   move(ALTURA_TELA+1, 1);
-  printw("%d Tiros Restantes / %d Pontos ", out_tiros, pontos);
+  printw("%d Tiros Restantes / %d Pontos", out_tiros, pontos);
 
   // Atualiza tela
   refresh();
@@ -540,7 +540,7 @@ void Teclado::init() {
   // Inicializa ncurses
   raw();				         /* Line buffering disabled	*/
 	keypad(stdscr, TRUE);	 /* We get F1, F2 etc..		*/
-	// noecho();			         /* Don't echo() while we do getch */
+	noecho();			         /* Don't echo() while we do getch */
   curs_set(0);           /* Do not display cursor */
 
   this->rodando = 1;
