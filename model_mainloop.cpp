@@ -95,7 +95,6 @@ int main () {
     if (t1-t0 > 500) break;
   }
 
-  int n_resp = 0;
   while (1) {
     // Atualiza timers
     t0 = t1;
@@ -107,7 +106,6 @@ int main () {
 
     // Atualiza tela
     tela->update();
-
 
     //Espera resposta
     move(100,100);
@@ -121,7 +119,7 @@ int main () {
     /* Respondendo */
     if (send(connection_fd, "PONG", 5, 0) < 0) {
     } else {
-      n_resp++;
+      //erro ao enviar mesnagem
     }
   
     char c = input_teclado;
@@ -152,5 +150,6 @@ int main () {
   tela->stop();
   teclado->stop();
   close(socket_fd);
+
   return 0;
 }
