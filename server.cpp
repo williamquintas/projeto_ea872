@@ -2,6 +2,9 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+
+#include <pthread.h>
+
 #include "oo_model.hpp"
 #include <ncurses.h>
 #include <stdlib.h>
@@ -17,12 +20,24 @@
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 
+int running = 1; //varivel global que controla a thread do accept
+
 using namespace std::chrono;
 uint64_t get_now_ms() {
   return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
 }
 
+void *wait_connections(void *parameters) {
+  while(running) {
+    int connection_fd;
+    connection_fd = accept(socket_fd, (struct sockaddr*)&client, &client_size);
+  }
+  return NULL;
+}
+
 int main () {
+
+  pthread_t esperar_conexoes;
   int socket_fd, connection_fd;
   struct sockaddr_in myself, client;
   socklen_t client_size = (socklen_t)sizeof(client);
@@ -73,6 +88,10 @@ int main () {
     t1 = get_now_ms();
     if (t1-t0 > 500) break;
   }
+
+  /* Dispara thread para ouvir conexoes */
+  pthread_create(&esperar_conexoes, NULL, wait_connections, NULL);
+
   while (1) {
     // Atualiza timers
     t0 = t1;
@@ -84,7 +103,6 @@ int main () {
     tela->update();
     //Espera resposta
     move(100,100);
-    connection_fd = accept(socket_fd, (struct sockaddr*)&client, &client_size);
     recv(connection_fd, &input_teclado, 1, 0);
     /* Identificando cliente */
     char ip_client[INET_ADDRSTRLEN];
@@ -92,6 +110,7 @@ int main () {
     char c = input_teclado;
     // Lê o teclado
     if (c=='q') {
+      running = 0;
       break;
     }
     if (c=='s') {
@@ -103,6 +122,7 @@ int main () {
     }
     if (c=='t') {
       if (n_tiro+1 == MAX_TIROS){
+        running = 0;
         break;
       }
       asample->set_position(0);
