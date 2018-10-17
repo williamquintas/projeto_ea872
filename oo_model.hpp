@@ -5,109 +5,88 @@
 #include "portaudio.h"
 
 namespace Audio {
-
-class Sample {
-  private:
-    std::vector<float> data;
-    unsigned int position;
-
-  public:
-    Sample();
-    ~Sample();
-    void load(const char *filename);
-    std::vector<float> get_data();
-    unsigned int get_position();
-    void set_position(unsigned int pos);
-    bool finished();
-
-};
-
-
-class Player {
-  private:
-    Sample *audio_sample;
-    bool playing;
-
-    PaStreamParameters  outputParameters;
-    PaStream*           stream;
-    PaError             err;
-    PaTime              streamOpened;
-
-
-  public:
-    Player();
-    ~Player();
-
-    void init();
-    void pause();
-    void stop();
-    void play(Sample *audiosample);
-    Sample *get_data();
-};
-
+  class Sample {
+    private:
+      std::vector<float> data;
+      unsigned int position;
+    public:
+      Sample();
+      ~Sample();
+      void load(const char *filename);
+      std::vector<float> get_data();
+      unsigned int get_position();
+      void set_position(unsigned int pos);
+      bool finished();
+  };
+  class Player {
+    private:
+      Sample *audio_sample;
+      bool playing;
+      PaStreamParameters  outputParameters;
+      PaStream*           stream;
+      PaError             err;
+      PaTime              streamOpened;
+    public:
+      Player();
+      ~Player();
+      void init();
+      void pause();
+      void stop();
+      void play(Sample *audiosample);
+      Sample *get_data();
+  };
 }
-
 class Nave {
   private:
-  float posicao;
-
+    float posicao;
   public:
-  Nave(float posicao);
-  float get_posicao();
-  void update(float nova_posicao);
+    Nave(float posicao);
+    float get_posicao();
+    void update(float nova_posicao);
 };
-
 class Alvo {
   private:
-  float posicao_x;
-  float posicao_y;
-  
+    float posicao_x;
+    float posicao_y;
   public:
-  Alvo(float posicao_x, float posicao_y);
-  float get_posicao_x();
-  float get_posicao_y();
-  void update(float nova_posicao_x, float nova_posicao_y);
+    Alvo(float posicao_x, float posicao_y);
+    float get_posicao_x();
+    float get_posicao_y();
+    void update(float nova_posicao_x, float nova_posicao_y);
 };
-
 class Tiro {
   private:
-  float posicao_x;
-  float posicao_y;
-  float velocidade;
-  bool existe; //0 se nao existe e 1 se existe o tiro
-
+    float posicao_x;
+    float posicao_y;
+    float velocidade;
+    bool existe; //0 se nao existe e 1 se existe o tiro
   public:
-  Tiro(float posicao_x, float posicao_y, float velocidade, bool existe);
-  float get_posicao_x();
-  float get_posicao_y();
-  float get_velocidade();
-  bool get_existe();
-  void update_existe(bool e);
-  void update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade);
+    Tiro(float posicao_x, float posicao_y, float velocidade, bool existe);
+    float get_posicao_x();
+    float get_posicao_y();
+    float get_velocidade();
+    bool get_existe();
+    void update_existe(bool e);
+    void update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade);
 };
-
 class ListaDeNaves {
- private:
+  private:
     std::vector<Nave*> *naves;
-
   public:
     ListaDeNaves();
     void hard_copy(ListaDeNaves *ldn);
     void add_nave(Nave *n);
     std::vector<Nave*> *get_naves();
 };
-
 class ListaDeTiros {
- private:
+  private:
     std::vector<Tiro*> *tiros;
-
   public:
     ListaDeTiros();
     void hard_copy(ListaDeTiros *ldt);
     void add_tiro(Tiro *t);
     std::vector<Tiro*> *get_tiros();
 };
-
 class Fisica {
   private:
     Alvo *alvo;
@@ -115,7 +94,6 @@ class Fisica {
     ListaDeTiros *lista_tiro;
     Audio::Player *player;
     Audio::Sample *asample;
-
   public:
     Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt);
     void add_nave(Nave *n);
@@ -125,7 +103,6 @@ class Fisica {
     void update_tiro(float deltaT);
     void destruir_tiro(int i_tiro);
 };
-
 class Tela {
   private:
     Alvo *alvo, *alvo_antigo;
@@ -133,7 +110,6 @@ class Tela {
     ListaDeTiros *lista_tiro, *lista_anterior_tiro;
     int maxI, maxJ;
     float maxX, maxY;
-
   public:
     Tela(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt, int maxI, int maxJ, float maxX, float maxY);
     ~Tela();
@@ -142,16 +118,12 @@ class Tela {
     void draw();
     void update();
 };
-
 void threadfun (char *keybuffer, int *control);
-
 class Teclado {
   private:
     char ultima_captura;
     int rodando;
-
     std::thread kb_thread;
-
   public:
     Teclado();
     ~Teclado();
@@ -159,5 +131,4 @@ class Teclado {
     void init();
     char getchar();
 };
-
 #endif

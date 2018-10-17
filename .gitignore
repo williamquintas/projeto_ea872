@@ -32,3 +32,7 @@
 *.app
 
 model
+
+\.vscode/settings\.json
+
+client
