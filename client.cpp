@@ -17,19 +17,39 @@
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 
+int socket_fd;
+
+void *receber_respostas(void *parametros) {
+  /* Recebendo resposta */
+  char reply[60];
+  int msg_len;
+  int msg_num;
+  msg_num = 0;
+  while(1) {
+  msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
+  if (msg_len > 0) {
+   // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
+    msg_num++;
+  }
+  }
+}
+
 int main() {
-  int socket_fd;
   struct sockaddr_in target;
+  pthread_t receiver;
+
   //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
   for (int k=1; k<MAX_TIROS; k++){
     Tiro *tiro = new Tiro(0, 0, 0, 0);
     t_lista->add_tiro(tiro);
   }
+
   //Criando a Nave
   Nave *nave1 = new Nave(1);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
+
   //Criando o alvo
   srand (time(NULL));
   Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % ALTURA_TELA));
@@ -38,26 +58,34 @@ int main() {
   tela->init();
   Teclado *teclado = new Teclado();
   teclado->init();
+
   //Espera
+  socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+ // printw("Socket criado\n");
+  target.sin_family = AF_INET;
+  target.sin_port = htons(3001);
+  inet_aton("127.0.0.1", &(target.sin_addr));
+  if (connect(socket_fd, (struct sockaddr*)&target, sizeof(target)) != 0) {
+     // printw("Problemas na conexao\n");
+      return 0;
+  }
+  //printw("Conectei ao servidor\n");
+  pthread_create(&receiver, NULL, receber_respostas, NULL);
+
+  /* Agora, meu socket funciona como um descritor de arquivo usual */
   while(1){
     char c = teclado->getchar();
-    socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-    target.sin_family = AF_INET;
-    target.sin_port = htons(3001);
-    inet_aton("127.0.0.1", &(target.sin_addr));
-    if (connect(socket_fd, (struct sockaddr*)&target, sizeof(target)) != 0) {
-        return 0;
+    if(c=='q'||c=='w'||c=='t'||c=='s'){
+      send(socket_fd, &c, 1, 0);
+     // printw("Escrevi mensagem de %c!\n",c);
+      if (c=='q') {
+        break;
+      }
     }
-    /* Agora, meu socket funciona como um descritor de arquivo usual */
-    send(socket_fd, &c, 1, 0);
-    /* Recebendo resposta */
-    char reply[10];
-    recv(socket_fd, reply, 10, 0);
-    if (c=='q') {
-      break;
-    }
+   // std::this_thread::sleep_for (std::chrono::milliseconds(100));
   }
-  close(socket_fd);
+
+  //close(socket_fd);
   teclado->stop();
   tela->stop();
   return 0;
