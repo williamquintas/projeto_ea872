@@ -26,11 +26,11 @@ void *receber_respostas(void *parametros) {
   int msg_num;
   msg_num = 0;
   while(1) {
-  msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
-  if (msg_len > 0) {
-   // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
-    msg_num++;
-  }
+    msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
+    if (msg_len > 0) {
+     // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
+      msg_num++;
+    }
   }
 }
 
@@ -75,6 +75,7 @@ int main() {
   /* Agora, meu socket funciona como um descritor de arquivo usual */
   while(1){
     char c = teclado->getchar();
+    std::this_thread::sleep_for (std::chrono::milliseconds(10));
     if(c=='q'||c=='w'||c=='t'||c=='s'){
       send(socket_fd, &c, 1, 0);
      // printw("Escrevi mensagem de %c!\n",c);

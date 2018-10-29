@@ -181,16 +181,13 @@ int main () {
               // Lê o teclado
               if (c=='q') {
                 running = 0;
-                c = '0';
                 break;
               }
               if (c=='s') {
                 f->andar_nave(1);
-                c = '0';
               }
               if (c=='w') {
                 f->andar_nave(-1);
-                c = '0';
               }
               if (c=='t') {
                 if (n_tiro+1 == MAX_TIROS){
@@ -201,7 +198,6 @@ int main () {
                 player->play(asample);
                 f->disparar_tiro(n_tiro);
                 n_tiro++;
-                c = '0';
               }
 
 
@@ -223,8 +219,9 @@ int main () {
             }
       }  
 
-    std::this_thread::sleep_for (std::chrono::milliseconds(100));
+//estava aqui o sleep
     }
+    std::this_thread::sleep_for (std::chrono::milliseconds(100));//estava 100 antes
   }
 
   for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++){
