@@ -206,7 +206,10 @@ int main () {
             if (input_teclado=='q'){
               running=0;
             }
-            sprintf(output_buffer, "USER %d: %c\n", user_iterator, input_teclado);
+            std::string buffer(sizeof(Nave), ' ');
+            nave1->serialize(buffer);
+            strcpy(output_buffer, buffer.c_str());
+            // sprintf(output_buffer, "USER %d: %c\n", user_iterator, input_teclado);
             //printw("%s\n", output_buffer);
             for (int ret=0; ret<MAX_CONEXOES; ret++) {
               if (conexao_usada[ret] == 1) {

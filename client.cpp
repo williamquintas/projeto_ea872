@@ -28,6 +28,10 @@ void *receber_respostas(void *parametros) {
   while(1) {
     msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
     if (msg_len > 0) {
+      struct ThreadArguments *ta = (struct ThreadArguments *) parametros;
+      std::string buffer(sizeof(Nave), ' ');
+      ta->nave->unserialize(buffer);
+      ta->tela->update();
      // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
       msg_num++;
     }
@@ -37,7 +41,7 @@ void *receber_respostas(void *parametros) {
 int main() {
   struct sockaddr_in target;
   pthread_t receiver;
-
+  struct ThreadArguments *ta = (struct ThreadArguments *) malloc(sizeof(struct ThreadArguments));
   //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
   for (int k=1; k<MAX_TIROS; k++){
@@ -71,11 +75,14 @@ int main() {
       return 0;
   }
   //printw("Conectei ao servidor\n");
-  pthread_create(&receiver, NULL, receber_respostas, NULL);
+  ta->nave = nave1;
+  ta->tela = tela;
+  pthread_create(&receiver, NULL, receber_respostas, ta);
 
   /* Agora, meu socket funciona como um descritor de arquivo usual */
   while(1){
     char c = teclado->getchar();
+    tela->update();
     std::this_thread::sleep_for (std::chrono::milliseconds(10));
     if(c=='q'||c=='w'||c=='t'||c=='s'){
       send(socket_fd, &c, 1, 0);

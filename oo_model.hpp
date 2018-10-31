@@ -151,4 +151,8 @@ struct DataContainer {
   float velocidade;
   bool existe; //0 se nao existe e 1 se existe o tiro
 };
+struct ThreadArguments {
+  Nave *nave;
+  Tela *tela;
+};
 #endif
