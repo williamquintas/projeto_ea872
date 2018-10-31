@@ -21,6 +21,9 @@
 #define LARGURA_TELA 40
 
 #define MAX_CONEXOES 5
+#ifdef __MACH__
+#define MSG_NOSIGNAL SO_NOSIGPIPE 
+#endif
 
 int running = 1; //varivel global que controla a thread do accept
 
