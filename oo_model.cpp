@@ -162,6 +162,18 @@ Nave::Nave(float posicao) {
   this->posicao = posicao;
 }
 
+Nave::Nave(std::string buffer_in) {
+  this->unserialize(buffer_in);
+}
+
+void Nave::serialize(std::string &buffer_out) {
+  std::memcpy((void*)buffer_out.c_str(), &(this->posicao), sizeof(float));
+}
+
+void Nave::unserialize(std::string buffer_in) {
+  std::memcpy(&(this->posicao), (void*)buffer_in.c_str(), sizeof(float));
+}
+
 void Nave::update(float nova_posicao) {
   this->posicao = nova_posicao;
 }

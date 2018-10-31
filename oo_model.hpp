@@ -36,11 +36,15 @@ namespace Audio {
       Sample *get_data();
   };
 }
+
 class Nave {
   private:
     float posicao;
   public:
     Nave(float posicao);
+    Nave(std::string buffer_in);
+    void serialize(std::string &buffer_out);
+    void unserialize(std::string buffer_in);
     float get_posicao();
     void update(float nova_posicao);
 };
@@ -48,8 +52,12 @@ class Alvo {
   private:
     float posicao_x;
     float posicao_y;
+    DataContainer data;
   public:
     Alvo(float posicao_x, float posicao_y);
+    Alvo(std::string buffer_in);
+    void serialize(std::string &buffer_out);
+    void unserialize(std::string buffer_in);
     float get_posicao_x();
     float get_posicao_y();
     void update(float nova_posicao_x, float nova_posicao_y);
@@ -60,8 +68,12 @@ class Tiro {
     float posicao_y;
     float velocidade;
     bool existe; //0 se nao existe e 1 se existe o tiro
+    DataContainer data;
   public:
     Tiro(float posicao_x, float posicao_y, float velocidade, bool existe);
+    Tiro(std::string buffer_in);
+    void serialize(std::string &buffer_out);
+    void unserialize(std::string buffer_in);
     float get_posicao_x();
     float get_posicao_y();
     float get_velocidade();
@@ -130,5 +142,15 @@ class Teclado {
     void stop();
     void init();
     char getchar();
+};
+
+enum TypeOfData { NAVE, LISTA_DE_NAVES, ALVO, TIRO, LISTA_DE_TIROS };
+struct DataContainer {
+  TypeOfData t;
+  float posicao;
+  float posicao_x;
+  float posicao_y;
+  float velocidade;
+  bool existe; //0 se nao existe e 1 se existe o tiro
 };
 #endif
