@@ -10,6 +10,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>   
+#include <cstring>
 
 #define VELOCIDADE_TIRO 10
 #define ACELERACAO_TIRO 0

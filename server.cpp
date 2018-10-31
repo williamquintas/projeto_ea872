@@ -5,6 +5,7 @@
 
 #include <pthread.h>
 
+#include <string.h>
 #include "oo_model.hpp"
 #include <ncurses.h>
 #include <stdlib.h>
