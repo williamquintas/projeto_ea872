@@ -109,8 +109,6 @@ int main () {
   Tela *tela = new Tela(alvo, n_lista, t_lista, 20, 20, 20, 20);
   tela->init();
   tela->draw();
-  Teclado *teclado = new Teclado();
-  teclado->init();
 
   //Variaveis para fisica
   uint64_t t0;
@@ -233,7 +231,6 @@ int main () {
 
   player->stop();
   tela->stop();
-  teclado->stop();
   pthread_join(esperar_conexoes, NULL);
   return 0;
 }

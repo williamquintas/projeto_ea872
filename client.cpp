@@ -56,6 +56,7 @@ int main() {
   Fisica *f = new Fisica(alvo, n_lista, t_lista);
   Tela *tela = new Tela(alvo, n_lista, t_lista, 20, 20, 20, 20);
   tela->init();
+  tela->draw();
   Teclado *teclado = new Teclado();
   teclado->init();
 

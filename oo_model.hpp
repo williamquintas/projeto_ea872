@@ -52,7 +52,6 @@ class Alvo {
   private:
     float posicao_x;
     float posicao_y;
-    DataContainer data;
   public:
     Alvo(float posicao_x, float posicao_y);
     Alvo(std::string buffer_in);
@@ -68,7 +67,6 @@ class Tiro {
     float posicao_y;
     float velocidade;
     bool existe; //0 se nao existe e 1 se existe o tiro
-    DataContainer data;
   public:
     Tiro(float posicao_x, float posicao_y, float velocidade, bool existe);
     Tiro(std::string buffer_in);
