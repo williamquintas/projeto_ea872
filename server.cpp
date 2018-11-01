@@ -79,8 +79,8 @@ int main () {
   pthread_t esperar_conexoes;
   int msglen;
   int user_iterator;
-  char output_buffer[60];
-  char input_buffer[50];
+  char output_buffer[100];
+  char input_buffer[100];
 
   /* Inicializando variaveis */
   client_size = (socklen_t)sizeof(client);
@@ -207,15 +207,19 @@ int main () {
             if (input_teclado=='q'){
               running=0;
             }
-            std::string buffer(sizeof(Nave), ' ');
-            nave1->serialize(buffer);
-            strcpy(output_buffer, buffer.c_str());
+            // std::string buffer(sizeof(Nave), ' ');
+            // nave1->serialize(buffer);
+            // Nave *nave2 = new Nave(buffer);
+            // std::cout << nave2->get_posicao() << '\n';
+            // strcpy(output_buffer, buffer.c_str());
+            const char *s = "5";
+            strcpy(output_buffer, s);
             // sprintf(output_buffer, "USER %d: %c\n", user_iterator, input_teclado);
             //printw("%s\n", output_buffer);
             for (int ret=0; ret<MAX_CONEXOES; ret++) {
               if (conexao_usada[ret] == 1) {
                // printw("Avisando user %d\n", ret);
-                if (send(connection_fd[ret], output_buffer, 50, MSG_NOSIGNAL) == -1) {
+                if (send(connection_fd[ret], output_buffer, 100, MSG_NOSIGNAL) == -1) {
                  /* Usuario desconectou!?? */
                  // printw("Usuario %d desconectou!\n", ret);
                   remover_conexao(ret);

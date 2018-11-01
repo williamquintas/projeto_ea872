@@ -12,6 +12,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string>
 
 #define MAX_TIROS 101
 #define ALTURA_TELA 20
@@ -21,18 +22,20 @@ int socket_fd;
 
 void *receber_respostas(void *parametros) {
   /* Recebendo resposta */
-  char reply[60];
+  char reply[100];
   int msg_len;
   int msg_num;
   msg_num = 0;
   while(1) {
-    msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
+    msg_len = recv(socket_fd, reply, 100, MSG_DONTWAIT);
     if (msg_len > 0) {
       struct ThreadArguments *ta = (struct ThreadArguments *) parametros;
-      std::string buffer(sizeof(Nave), ' ');
-      ta->nave->unserialize(buffer);
+      // std::string buffer(sizeof(Nave), ' ');
+      // ta->nave->unserialize(buffer);
+      std::string str(reply);
+      ta->nave->update(std::stof(str));
       ta->tela->update();
-     // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
+      // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
       msg_num++;
     }
   }
