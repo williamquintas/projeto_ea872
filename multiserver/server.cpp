@@ -7,13 +7,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define MAX_CONEXOES 5
+#define MAX_CONEXOES 4
 
-/* Estou usando variaveis globais para me referir a variaveis que sao usadas
- * tanto pela trhead principal quanto pela auxiliar. Mas, criancas, nao facam
- * isso em casa. A abordagem correta eh colocar todas as variaveis numa struct e
- * passa-la como parametro na chamada da thread */
-
+/* Variaveis globais do servidor */
 struct sockaddr_in myself, client;
 socklen_t client_size;
 int socket_fd;
@@ -21,7 +17,7 @@ int connection_fd[MAX_CONEXOES];
 int conexao_usada[MAX_CONEXOES];
 int running;
 
-
+/* Funcoes do servidor */
 int adicionar_conexao(int new_connection_fd) {
   int i;
   for (i=0; i<MAX_CONEXOES; i++) {
@@ -57,16 +53,16 @@ void *wait_connections(void *parameters) {
   return NULL;
 }
 
-
-
+/* FUNCAO PRINCIPAL */
 int main() {
+  //Declaraco de variaveis
   pthread_t esperar_conexoes;
   int msglen;
   int user_iterator;
   char output_buffer[60];
   char input_buffer[50];
 
-  /* Inicializando variaveis */
+  /* Inicializando variaveis do servidor*/
   client_size = (socklen_t)sizeof(client);
   for (int i=0; i<MAX_CONEXOES; i++) {
     conexao_usada[i] = 0;
@@ -107,7 +103,6 @@ int main() {
                /* Usuario desconectou!?? */
                 printf("Usuario %d desconectou!\n", ret);
                 remover_conexao(ret);
-
               }
             }
           }
@@ -119,7 +114,6 @@ int main() {
   printf("Encerrando server...\n");
   for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++)
     remover_conexao(user_iterator);
-
   pthread_join(esperar_conexoes, NULL);
 
   return 0;

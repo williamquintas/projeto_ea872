@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+#include "teclado.hpp"
+
 int socket_fd;
 
 void *receber_respostas(void *parametros) {
@@ -25,6 +27,9 @@ void *receber_respostas(void *parametros) {
 }
 
 int main() {
+  Teclado *teclado = new Teclado();
+  teclado->init();
+
   struct sockaddr_in target;
   pthread_t receiver;
 
@@ -44,11 +49,19 @@ int main() {
   pthread_create(&receiver, NULL, receber_respostas, NULL);
 
   while(1) {
-  /* Agora, meu socket funciona como um descritor de arquivo usual */
-  send(socket_fd, "PING", 5, 0);
-  printf("Escrevi mensagem de ping!\n");
-  sleep(3);
+    char c = teclado->getchar();
+    std::this_thread::sleep_for (std::chrono::milliseconds(10));
+    printf("%c", c);
+    if (c == 's') {
+      send(socket_fd, &c, 1, 0);
+      printf("Escrevi mensagem de %c!\n", c);
+    }
+    if (c=='q') {
+      break;
+    }
   }
+
+  teclado->stop();
   return 0;
 }
 
