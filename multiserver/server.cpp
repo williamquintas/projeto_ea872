@@ -8,6 +8,9 @@
 #include <arpa/inet.h>
 
 #define MAX_CONEXOES 4
+#ifdef __MACH__
+#define MSG_NOSIGNAL SO_NOSIGPIPE 
+#endif
 
 /* Variaveis globais do servidor */
 struct sockaddr_in myself, client;
@@ -16,6 +19,9 @@ int socket_fd;
 int connection_fd[MAX_CONEXOES];
 int conexao_usada[MAX_CONEXOES];
 int running;
+
+int total_tiros = 0;
+int pontos = 0;
 
 /* Funcoes do servidor */
 int adicionar_conexao(int new_connection_fd) {
