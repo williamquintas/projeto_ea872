@@ -7,61 +7,89 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+#include "alvo.hpp"
+#include "fisica.hpp"
+#include "nave.hpp"
 #include "teclado.hpp"
+#include "tela.hpp"
+#include "tiro.hpp"
+
+#define MAX_TIROS 101
+#define ALTURA_TELA 20
+#define LARGURA_TELA 40
 
 int socket_fd;
 
 void *receber_respostas(void *parametros) {
   /* Recebendo resposta */
-  char reply[60];
+  char reply[50];
   int msg_len;
   int msg_num;
   msg_num = 0;
   while(1) {
   msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
   if (msg_len > 0) {
-    printf("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
+    // printf("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
     msg_num++;
   }
   }
 }
 
 int main() {
-  Teclado *teclado = new Teclado();
-  teclado->init();
-
   struct sockaddr_in target;
   pthread_t receiver;
 
+  //Criando os tiros
+  ListaDeTiros *t_lista = new ListaDeTiros();
+  for (int k=1; k<MAX_TIROS; k++){
+    Tiro *tiro = new Tiro(0, 0, 0, 0);
+    t_lista->add_tiro(tiro);
+  }
+
+  //Criando a Nave
+  Nave *nave1 = new Nave(1);
+  ListaDeNaves *n_lista = new ListaDeNaves();
+  n_lista->add_nave(nave1);
+
+  //Criando o alvo
+  srand (time(NULL));
+  Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % ALTURA_TELA));
+  Fisica *f = new Fisica(alvo, n_lista, t_lista);
+  Tela *tela = new Tela(alvo, n_lista, t_lista, 20, 20, 20, 20);
+  tela->init();
+  tela->draw();
+  Teclado *teclado = new Teclado();
+  teclado->init();
+
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  printf("Socket criado\n");
+  // printf("Socket criado\n");
 
   target.sin_family = AF_INET;
   target.sin_port = htons(3001);
   inet_aton("127.0.0.1", &(target.sin_addr));
-  printf("Tentando conectar\n");
+  // printf("Tentando conectar\n");
   if (connect(socket_fd, (struct sockaddr*)&target, sizeof(target)) != 0) {
-    printf("Problemas na conexao\n");
+    // printf("Problemas na conexao\n");
     return 0;
   }
-  printf("Conectei ao servidor\n");
+  // printf("Conectei ao servidor\n");
 
   pthread_create(&receiver, NULL, receber_respostas, NULL);
 
   while(1) {
     char c = teclado->getchar();
     std::this_thread::sleep_for (std::chrono::milliseconds(10));
-    printf("%c", c);
-    if (c == 's') {
+    if(c=='q'||c=='w'||c=='t'||c=='s'){
       send(socket_fd, &c, 1, 0);
-      printf("Escrevi mensagem de %c!\n", c);
-    }
-    if (c=='q') {
-      break;
+      //printw("Escrevi mensagem de %c!\n",c);
+      if (c=='q') {
+        break;
+      }
     }
   }
 
   teclado->stop();
+  tela->stop();
   return 0;
 }
 
