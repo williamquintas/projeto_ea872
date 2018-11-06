@@ -1,12 +1,12 @@
 FLAGS=-lportaudio -lncurses -lpthread -std=c++11
 
-all: model client
+all: server client
 
-model: server.cpp oo_model.cpp oo_model.hpp
-	g++ -oserver server.cpp oo_model.cpp $(FLAGS)
+server: server.cpp alvo.cpp audio.cpp fisica.cpp nave.cpp teclado.cpp tela.cpp tiro.cpp
+	g++ -oserver server.cpp alvo.cpp audio.cpp fisica.cpp nave.cpp teclado.cpp tela.cpp tiro.cpp $(FLAGS)
 
-client: client.cpp oo_model.cpp
-	g++ -oclient client.cpp oo_model.cpp $(FLAGS)
+client: client.cpp alvo.cpp audio.cpp fisica.cpp nave.cpp teclado.cpp tela.cpp tiro.cpp
+	g++ -oclient client.cpp alvo.cpp audio.cpp fisica.cpp nave.cpp teclado.cpp tela.cpp tiro.cpp $(FLAGS)
 
 remove:
 	rm server client
