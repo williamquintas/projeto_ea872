@@ -9,7 +9,7 @@ Fisica::Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt) {
   this->lista_nave = ldn;
   this->lista_tiro = ldt;
   this->asample = new Audio::Sample();
-  this->asample->load("../assets/explosion.dat");
+  this->asample->load("assets/explosion.dat");
   this->player = new Audio::Player();
   this->player->init();
   //Espera

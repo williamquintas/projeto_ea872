@@ -1,18 +1,18 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <vector>
-#include "oo_model.hpp"
-#include <ncurses.h>
-#include <stdlib.h>
-#include <time.h>       /* time */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <string>
+#include <pthread.h>
+
+#include "alvo.hpp"
+#include "fisica.hpp"
+#include "nave.hpp"
+#include "teclado.hpp"
+#include "tela.hpp"
+#include "tiro.hpp"
 
 #define MAX_TIROS 101
 #define ALTURA_TELA 20
@@ -22,29 +22,23 @@ int socket_fd;
 
 void *receber_respostas(void *parametros) {
   /* Recebendo resposta */
-  char reply[100];
+  char reply[50];
   int msg_len;
   int msg_num;
   msg_num = 0;
   while(1) {
-    msg_len = recv(socket_fd, reply, 100, MSG_DONTWAIT);
-    if (msg_len > 0) {
-      struct ThreadArguments *ta = (struct ThreadArguments *) parametros;
-      // std::string buffer(sizeof(Nave), ' ');
-      // ta->nave->unserialize(buffer);
-      std::string str(reply);
-      ta->nave->update(std::stof(str));
-      ta->tela->update();
-      // printw("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
-      msg_num++;
-    }
+  msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
+  if (msg_len > 0) {
+    // printf("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
+    msg_num++;
+  }
   }
 }
 
 int main() {
   struct sockaddr_in target;
   pthread_t receiver;
-  struct ThreadArguments *ta = (struct ThreadArguments *) malloc(sizeof(struct ThreadArguments));
+
   //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
   for (int k=1; k<MAX_TIROS; k++){
@@ -67,38 +61,35 @@ int main() {
   Teclado *teclado = new Teclado();
   teclado->init();
 
-  //Espera
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
- // printw("Socket criado\n");
+  // printf("Socket criado\n");
+
   target.sin_family = AF_INET;
   target.sin_port = htons(3001);
   inet_aton("127.0.0.1", &(target.sin_addr));
+  // printf("Tentando conectar\n");
   if (connect(socket_fd, (struct sockaddr*)&target, sizeof(target)) != 0) {
-     // printw("Problemas na conexao\n");
-      return 0;
+    // printf("Problemas na conexao\n");
+    return 0;
   }
-  //printw("Conectei ao servidor\n");
-  ta->nave = nave1;
-  ta->tela = tela;
-  pthread_create(&receiver, NULL, receber_respostas, ta);
+  // printf("Conectei ao servidor\n");
 
-  /* Agora, meu socket funciona como um descritor de arquivo usual */
-  while(1){
+  pthread_create(&receiver, NULL, receber_respostas, NULL);
+
+  while(1) {
     char c = teclado->getchar();
-    tela->update();
     std::this_thread::sleep_for (std::chrono::milliseconds(10));
     if(c=='q'||c=='w'||c=='t'||c=='s'){
       send(socket_fd, &c, 1, 0);
-     // printw("Escrevi mensagem de %c!\n",c);
+      //printw("Escrevi mensagem de %c!\n",c);
       if (c=='q') {
         break;
       }
     }
-   // std::this_thread::sleep_for (std::chrono::milliseconds(100));
   }
 
-  //close(socket_fd);
   teclado->stop();
   tela->stop();
   return 0;
 }
+
