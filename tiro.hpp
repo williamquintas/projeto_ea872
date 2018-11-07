@@ -1,6 +1,7 @@
 #ifndef TIRO_HPP
 #define TIRO_HPP
 #include <string>
+#include <vector>
 
 class Tiro {
   private:

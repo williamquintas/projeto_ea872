@@ -1,4 +1,5 @@
 #include "nave.hpp"
+#include <cstring>
 
 //Nave
 Nave::Nave(float posicao) {

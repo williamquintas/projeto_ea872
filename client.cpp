@@ -13,25 +13,37 @@
 #include "teclado.hpp"
 #include "tela.hpp"
 #include "tiro.hpp"
+#include <ncurses.h>
 
 #define MAX_TIROS 101
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 
 int socket_fd;
+float pos_nave0;
 
 void *receber_respostas(void *parametros) {
   /* Recebendo resposta */
   char reply[50];
+  char in_buffer_nave0[50];
   int msg_len;
   int msg_num;
   msg_num = 0;
   while(1) {
-  msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
-  if (msg_len > 0) {
-    // printf("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, reply);
-    msg_num++;
-  }
+    msg_len = recv(socket_fd, reply, 50, MSG_DONTWAIT);
+    if(msg_len>0){
+      //printf("[01]: %s\n", reply);
+    }
+    msg_len = recv(socket_fd, in_buffer_nave0, 50, MSG_DONTWAIT); //a segunda msg recebida sera a posicao da primeira nave do vetor
+    if(msg_len>0){
+      //printf("[02]: %s\n", in_buffer_nave0);
+      sscanf(in_buffer_nave0,"%f", &pos_nave0);
+      printf("pos_nave0: %f\n", pos_nave0);
+    }
+    if (msg_len > 0) {
+      //printf("[%d][%d] RECEBI:\n%s\n", msg_num, msg_len, nave);
+      msg_num++;
+    }
   }
 }
 

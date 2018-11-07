@@ -8,6 +8,8 @@
 #include <arpa/inet.h>
 #include <chrono>
 #include <thread>
+#include <ncurses.h>
+#include <iostream>   
 
 #include "alvo.hpp"
 #include "nave.hpp"
@@ -83,7 +85,8 @@ int main() {
   pthread_t esperar_conexoes;
   int msglen;
   int user_iterator;
-  char output_buffer[50];
+  char output_buffer_teclado[50];
+  char output_buffer_nave[50];
   char input_buffer[50];
   char input_teclado;
 
@@ -105,6 +108,7 @@ int main() {
   Nave *nave1 = new Nave(1);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
+
 
   //Criando o alvo
   srand (time(NULL));
@@ -168,12 +172,17 @@ int main() {
     // Atualiza tela
     tela->update(&total_tiros, &pontos);
 
+    //Tentando mandar a posicao da primeira nave do vetor
+    std::vector<Nave *> *n = n_lista->get_naves();
+    printf("nave1 = %.1lf\n", (*n)[0]->get_posicao());
+    sprintf(output_buffer_nave, "%lf", (*n)[0]->get_posicao());
+    printf("STRING: %s\n", output_buffer_nave);
+
     for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++) {
       if (conexao_usada[user_iterator] == 1) {
         msglen = recv(connection_fd[user_iterator], &input_teclado, 1, MSG_DONTWAIT);
         if (msglen > 0) {
           // printf("Recebi mensagem de %d\n", user_iterator);
-          // Lê o teclado
           // Lê o teclado
           if (input_teclado=='q') {
             running = 0;
@@ -200,18 +209,20 @@ int main() {
           for (int ret=0; ret<MAX_CONEXOES; ret++) {
             if (conexao_usada[ret] == 1) {
               // printf("Avisando user %d\n", ret);
-              if (send(connection_fd[ret], output_buffer, 50, 0) == -1) {
+              printw("ret = %d\n", ret);
+              if (send(connection_fd[ret], output_buffer_teclado, 50, 0) == -1) {
                /* Usuario desconectou!?? */
                 // printf("Usuario %d desconectou!\n", ret);
                 remover_conexao(ret);
               }
+              send(connection_fd[ret], output_buffer_nave, 50, 0);
             }
           }
         }
       }
     //estava aqui o sleep
     }
-    std::this_thread::sleep_for (std::chrono::milliseconds(100));//estava 100 antes
+    std::this_thread::sleep_for (std::chrono::milliseconds(100));
   }
 
   // printf("Encerrando server...\n");
