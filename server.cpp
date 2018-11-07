@@ -174,9 +174,9 @@ int main() {
 
     //Tentando mandar a posicao da primeira nave do vetor
     std::vector<Nave *> *n = n_lista->get_naves();
-    printf("nave1 = %.1lf\n", (*n)[0]->get_posicao());
+    //printf("nave1 = %.1lf\n", (*n)[0]->get_posicao());
     sprintf(output_buffer_nave, "%lf", (*n)[0]->get_posicao());
-    printf("STRING: %s\n", output_buffer_nave);
+    //printf("STRING: %s\n", output_buffer_nave);
 
     for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++) {
       if (conexao_usada[user_iterator] == 1) {
