@@ -23,24 +23,44 @@ int total_tiros = 0;
 int pontos = 0;
 
 int socket_fd;
+
+//Variaveis de send e recv
 float pos_nave0;
+float alvo_x;
+float alvo_y;
 
 
 void *receber_respostas(void *parametros) {
   /* Recebendo resposta */
   char reply[50];
-  char in_buffer_nave0[50];
   int msg_len;
   int msg_num;
   msg_num = 0;
 
+  //Variaveis de input
+  char in_flag[100];
+  char input_buffer[50];
+
   while(1) {
-    //A primeira mensagem recebida eh a da primeira nave do vetor
-    //Se a ordem comecar a dar problema, o servidor pode enviar uma flag antes
-    msg_len = recv(socket_fd, in_buffer_nave0, 50, MSG_DONTWAIT);
-    if(msg_len>0){
-      sscanf(in_buffer_nave0,"%f", &pos_nave0);
+    //A flag de qual informacao o buffer contem encontra-se na posicao 45
+
+    //Nave 0
+    msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
+    if(msg_len>0 && input_buffer[45] == '0'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &pos_nave0);
     }
+
+    //Alvo x e y
+    if(msg_len>0 && input_buffer[45] == '1'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &alvo_x);
+    }
+    if(msg_len>0 && input_buffer[45] == '2'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &alvo_y);
+    }
+ 
   }
 
 }
@@ -98,7 +118,7 @@ int main() {
 
   pthread_create(&receiver, NULL, receber_respostas, NULL);
 
-  //Tentando atualizar o vetor de naves
+  //Colocando o vetor de naves em uma variavel auxiliar
   std::vector<Nave *> *n = n_lista->get_naves();
 
   while(1) {
@@ -107,6 +127,8 @@ int main() {
     // Atualiza tela
     tela->update(&total_tiros, &pontos);
     (*n)[0]->update(pos_nave0);
+    //printf("DEPOIS alvo = (%f,%f)\n", alvo_x, alvo_y);
+    alvo->update(alvo_x, alvo_y);
 
     char c = teclado->getchar();
     std::this_thread::sleep_for (std::chrono::milliseconds(10));

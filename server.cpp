@@ -85,10 +85,11 @@ int main() {
   pthread_t esperar_conexoes;
   int msglen;
   int user_iterator;
-  char output_buffer_teclado[50];
-  char output_buffer_nave[50];
   char input_buffer[50];
   char input_teclado;
+
+  //Variaveis de buffer
+  char output_buffer[50];
 
   /* Inicializando variaveis do servidor*/
   client_size = (socklen_t)sizeof(client);
@@ -172,13 +173,24 @@ int main() {
     // Atualiza tela
     tela->update(&total_tiros, &pontos);
 
-    //Mandando a posicao da primeira nave
-    std::vector<Nave *> *n = n_lista->get_naves();
-    sprintf(output_buffer_nave, "%lf", (*n)[0]->get_posicao());
-
     for (int ret=0; ret<MAX_CONEXOES; ret++) {
        if (conexao_usada[ret] == 1) { //sem opcao de desconectar
-          send(connection_fd[ret], output_buffer_nave, 50, 0);
+
+          //Mandando a posicao da primeira nave
+          std::vector<Nave *> *n = n_lista->get_naves();
+          sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
+          output_buffer[45] = '0';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          //Mandando a posicao dos alvos
+          sprintf(output_buffer, "%lf", alvo->get_posicao_x());
+          output_buffer[45] = '1';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          sprintf(output_buffer, "%lf", alvo->get_posicao_y());
+          output_buffer[45] = '2';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
        }
     }
 
