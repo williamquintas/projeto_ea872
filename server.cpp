@@ -191,6 +191,33 @@ int main() {
           output_buffer[45] = '2';
           send(connection_fd[ret], output_buffer, 50, 0);
 
+          //Mandando as informacoes dos pontos, deltaT e total de tiros
+          sprintf(output_buffer, "%f", (float)deltaT);
+          output_buffer[45] = '3';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          sprintf(output_buffer, "%d", pontos);
+          output_buffer[45] = '4';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          sprintf(output_buffer, "%d", total_tiros);
+          output_buffer[45] = '5';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          //Mandando as informacoes dos tiros
+          //std::vector<Tiro *> *t = t_lista->get_tiros();
+         // sprintf(output_buffer, "%f", (*t)[0]->get_posicao_x());
+         // output_buffer[45] = '6';
+         // send(connection_fd[ret], output_buffer, 50, 0);
+
+         // sprintf(output_buffer, "%f", (*t)[0]->get_posicao_y());
+         // output_buffer[45] = '7';
+         // send(connection_fd[ret], output_buffer, 50, 0);
+
+         // sprintf(output_buffer, "%f", (*t)[0]->get_velocidade());
+         // output_buffer[45] = '8';
+         // send(connection_fd[ret], output_buffer, 50, 0);
+
        }
     }
 

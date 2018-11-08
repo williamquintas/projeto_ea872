@@ -19,15 +19,18 @@
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 
-int total_tiros = 0;
-int pontos = 0;
-
 int socket_fd;
 
 //Variaveis de send e recv
 float pos_nave0;
 float alvo_x;
 float alvo_y;
+float tiro1_x;
+float tiro1_y;
+float tiro1_vel;
+float deltaT_global;
+int pontos;
+int total_tiros;
 
 
 void *receber_respostas(void *parametros) {
@@ -60,6 +63,34 @@ void *receber_respostas(void *parametros) {
       input_buffer[45] = ' ';
       sscanf(input_buffer,"%f", &alvo_y);
     }
+
+   //deltaT, pontos, total de tiros
+    if(msg_len>0 && input_buffer[45] == '3'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &deltaT_global);
+    }
+    if(msg_len>0 && input_buffer[45] == '4'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%d", &pontos);
+    }
+    if(msg_len>0 && input_buffer[45] == '5'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%d", &total_tiros);
+    }
+
+    //Tiro da nave 0
+   // if(msg_len>0 && input_buffer[45] == '6'){
+   //  input_buffer[45] = ' ';
+   //   sscanf(input_buffer,"%f", &tiro1_x);
+   // }
+   // if(msg_len>0 && input_buffer[45] == '7'){
+   //   input_buffer[45] = ' ';
+   //   sscanf(input_buffer,"%f", &tiro1_y);
+   // }
+   // if(msg_len>0 && input_buffer[45] == '8'){
+   //   input_buffer[45] = ' ';
+    //  sscanf(input_buffer,"%f", &tiro1_vel);
+   // }
  
   }
 
@@ -121,13 +152,16 @@ int main() {
   //Colocando o vetor de naves em uma variavel auxiliar
   std::vector<Nave *> *n = n_lista->get_naves();
 
+  float deltaT = deltaT_global;
+
   while(1) {
     // Atualiza modelo
-    //f->update_tiro(0, NULL);
+    f->update_tiro(deltaT, &pontos);
     // Atualiza tela
     tela->update(&total_tiros, &pontos);
+
+    //Atualizando os parametros que chegaram pelo recv
     (*n)[0]->update(pos_nave0);
-    //printf("DEPOIS alvo = (%f,%f)\n", alvo_x, alvo_y);
     alvo->update(alvo_x, alvo_y);
 
     char c = teclado->getchar();
