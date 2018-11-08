@@ -177,6 +177,7 @@ int main() {
     //printf("nave1 = %.1lf\n", (*n)[0]->get_posicao());
     sprintf(output_buffer_nave, "%lf", (*n)[0]->get_posicao());
     //printf("STRING: %s\n", output_buffer_nave);
+              send(connection_fd[0], output_buffer_nave, 50, 0);
 
     for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++) {
       if (conexao_usada[user_iterator] == 1) {
@@ -209,17 +210,18 @@ int main() {
           for (int ret=0; ret<MAX_CONEXOES; ret++) {
             if (conexao_usada[ret] == 1) {
               // printf("Avisando user %d\n", ret);
-              printw("ret = %d\n", ret);
-              if (send(connection_fd[ret], output_buffer_teclado, 50, 0) == -1) {
+              //printw("ret = %d\n", ret);
+              //if (send(connection_fd[ret], output_buffer_teclado, 50, 0) == -1) {
                /* Usuario desconectou!?? */
                 // printf("Usuario %d desconectou!\n", ret);
-                remover_conexao(ret);
-              }
-              send(connection_fd[ret], output_buffer_nave, 50, 0);
+               // remover_conexao(ret);
+              //}
+              //send(connection_fd[ret], output_buffer_nave, 50, 0);
             }
           }
         }
       }
+
     //estava aqui o sleep
     }
     std::this_thread::sleep_for (std::chrono::milliseconds(100));
