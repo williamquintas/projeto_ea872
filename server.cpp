@@ -18,7 +18,7 @@
 #include "tela.hpp"
 #include "audio.hpp"
 
-#define MAX_TIROS 101
+#define MAX_TIROS 51
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 #define MAX_CONEXOES 4
@@ -205,18 +205,29 @@ int main() {
           send(connection_fd[ret], output_buffer, 50, 0);
 
           //Mandando as informacoes dos tiros
-          //std::vector<Tiro *> *t = t_lista->get_tiros();
-         // sprintf(output_buffer, "%f", (*t)[0]->get_posicao_x());
-         // output_buffer[45] = '6';
-         // send(connection_fd[ret], output_buffer, 50, 0);
+          std::vector<Tiro *> *t = t_lista->get_tiros();
+          int tiro_i = 0;
+          for (int i = 48; i<97; i++){
+            output_buffer[46] = i;
 
-         // sprintf(output_buffer, "%f", (*t)[0]->get_posicao_y());
-         // output_buffer[45] = '7';
-         // send(connection_fd[ret], output_buffer, 50, 0);
+            sprintf(output_buffer, "%f", (*t)[tiro_i]->get_posicao_x());
+            output_buffer[45] = '6';
+            send(connection_fd[ret], output_buffer, 50, 0);
 
-         // sprintf(output_buffer, "%f", (*t)[0]->get_velocidade());
-         // output_buffer[45] = '8';
-         // send(connection_fd[ret], output_buffer, 50, 0);
+            sprintf(output_buffer, "%f", (*t)[tiro_i]->get_posicao_y());
+            output_buffer[45] = '7';
+            send(connection_fd[ret], output_buffer, 50, 0);
+
+            sprintf(output_buffer, "%f", (*t)[tiro_i]->get_velocidade());
+            output_buffer[45] = '8';
+            send(connection_fd[ret], output_buffer, 50, 0);
+
+            sprintf(output_buffer, "%d", (*t)[tiro_i]->get_existe());
+            output_buffer[45] = '9';
+            send(connection_fd[ret], output_buffer, 50, 0);
+            
+            tiro_i++;
+          }
 
        }
     }
