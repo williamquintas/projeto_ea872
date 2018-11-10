@@ -9,7 +9,12 @@
 #define ACELERACAO_TIRO 0
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
-#define POSICAO_X_NAVE 3
+#define POSICAO_X_NAVE_0 2
+
+#define MAX_X 38
+#define MIN_X 2
+#define MAX_Y 19
+#define MIN_Y 1
 
 class Fisica {
   private:

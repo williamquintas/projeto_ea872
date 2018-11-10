@@ -131,7 +131,7 @@ void Tela::update(int *total_tiros, int *pontos) {
         y = POSICAO_Y_NAVE_2;
         x = (int) ((*naves_old)[k]->get_posicao()) * (this->maxI / this->maxX);
         move(y, x);
-        if (y<ALTURA_TELA && y>0){
+        if (x<LARGURA_TELA && x>0){
             echochar(' ');
         }
      }
@@ -140,7 +140,7 @@ void Tela::update(int *total_tiros, int *pontos) {
         y = POSICAO_Y_NAVE_3;
         x = (int) ((*naves_old)[k]->get_posicao()) * (this->maxI / this->maxX);
         move(y, x);
-        if (y<ALTURA_TELA && y>0){
+        if (x<LARGURA_TELA && x>0){
             echochar(' ');
         }
      }
@@ -174,7 +174,7 @@ void Tela::update(int *total_tiros, int *pontos) {
         y = POSICAO_Y_NAVE_2;
         x = (int) ((*naves)[k]->get_posicao()) * (this->maxI / this->maxX);
         move(y, x);
-        if (y<ALTURA_TELA && y>0){
+        if (x<LARGURA_TELA && x>0){
             echochar('V');
         }
         // Atualiza a nave antiga
@@ -185,7 +185,7 @@ void Tela::update(int *total_tiros, int *pontos) {
         y = POSICAO_Y_NAVE_3;
         x = (int) ((*naves)[k]->get_posicao()) * (this->maxI / this->maxX);
         move(y, x);
-        if (y<ALTURA_TELA && y>0){
+        if (x<LARGURA_TELA && x>0){
             echochar('A');
         }
         // Atualiza a nave antiga

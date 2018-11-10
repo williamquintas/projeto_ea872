@@ -26,14 +26,14 @@ void Fisica::andar_nave(int deslocamento, int i_nave) {
 
   //Naves na vertical
   if (i_nave == 0 || i_nave == 1){
-    if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < ALTURA_TELA) {
+    if ((*n)[i_nave]->get_posicao() + deslocamento > MIN_Y && (*n)[i_nave]->get_posicao() + deslocamento < MAX_Y) {
       (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
     } 
   }
 
   //Naves na horizontal
   if (i_nave == 2 || i_nave == 3){
-    if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < LARGURA_TELA) {
+    if ((*n)[i_nave]->get_posicao() + deslocamento > MIN_X && (*n)[i_nave]->get_posicao() + deslocamento < MAX_X) {
       (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
     } 
   }
@@ -45,7 +45,7 @@ void Fisica::disparar_tiro(int i_tiro, int *total_tiros){
   std::vector<Nave *> *n = this->lista_nave->get_naves();
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   (*t)[i_tiro]->update_existe(1);
-  (*t)[i_tiro]->update(POSICAO_X_NAVE+2, (*n)[0]->get_posicao(), VELOCIDADE_TIRO);
+  (*t)[i_tiro]->update(POSICAO_X_NAVE_0+2, (*n)[0]->get_posicao(), VELOCIDADE_TIRO);
 }
 
 void Fisica::destruir_tiro(int i_tiro){
