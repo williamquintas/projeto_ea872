@@ -106,11 +106,15 @@ int main() {
   }
 
   //Criando a Nave
-  Nave *nave1 = new Nave(1);
-  Nave *nave2 = new Nave(1);
+  Nave *nave1 = new Nave(3);
+  Nave *nave2 = new Nave(3);
+  Nave *nave3 = new Nave(3);
+  Nave *nave4 = new Nave(3);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
   n_lista->add_nave(nave2);
+  n_lista->add_nave(nave3);
+  n_lista->add_nave(nave4);
 
 
   //Criando o alvo
@@ -184,23 +188,18 @@ int main() {
           sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
           output_buffer[45] = '0';
           send(connection_fd[ret], output_buffer, 50, 0);
-
           //Mandando a posicao da segunda nave
           sprintf(output_buffer, "%f", (*n)[1]->get_posicao());
           output_buffer[45] = 'a';
           send(connection_fd[ret], output_buffer, 50, 0);
-
           //Mandando a posicao da terceira nave
-           //std::vector<Nave *> *n = n_lista->get_naves();
-           //sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
-           //output_buffer[45] = 'b';
-          // send(connection_fd[ret], output_buffer, 50, 0);
-
+          sprintf(output_buffer, "%f", (*n)[2]->get_posicao());
+          output_buffer[45] = 'b';
+          send(connection_fd[ret], output_buffer, 50, 0);
           //Mandando a posicao da quarta nave
-          // std::vector<Nave *> *n = n_lista->get_naves();
-          // sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
-          // output_buffer[45] = 'c';
-          // send(connection_fd[ret], output_buffer, 50, 0);
+          sprintf(output_buffer, "%f", (*n)[3]->get_posicao());
+          output_buffer[45] = 'c';
+          send(connection_fd[ret], output_buffer, 50, 0);
 
           //Mandando a posicao dos alvos
           sprintf(output_buffer, "%lf", alvo->get_posicao_x());

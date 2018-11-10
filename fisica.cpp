@@ -23,9 +23,21 @@ Fisica::Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt) {
 
 void Fisica::andar_nave(int deslocamento, int i_nave) {
   std::vector<Nave *> *n = this->lista_nave->get_naves();
-  if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < ALTURA_TELA) {
-    (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
+
+  //Naves na vertical
+  if (i_nave == 0 || i_nave == 1){
+    if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < ALTURA_TELA) {
+      (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
+    } 
   }
+
+  //Naves na horizontal
+  if (i_nave == 2 || i_nave == 3){
+    if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < LARGURA_TELA) {
+      (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
+    } 
+  }
+
 }
 
 void Fisica::disparar_tiro(int i_tiro, int *total_tiros){

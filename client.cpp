@@ -60,26 +60,21 @@ void *receber_respostas(void *parametros) {
       input_buffer[45] = ' ';
       sscanf(input_buffer,"%f", &pos_nave0);
     }
-
     //Segunda nave [1]
     if(msg_len>0 && input_buffer[45] == 'a'){
       input_buffer[45] = ' ';
       sscanf(input_buffer,"%f", &pos_nave1);
     }
-
-    //Terceira nave
-    //msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
-    //if(msg_len>0 && input_buffer[45] == 'b'){
-     // input_buffer[45] = ' ';
-     // sscanf(input_buffer,"%f", &pos_nave2);
-    //}
-
-    //Quarta nave
-   // msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
-    //if(msg_len>0 && input_buffer[45] == 'c'){
-    //  input_buffer[45] = ' ';
-    //  sscanf(input_buffer,"%f", &pos_nave3);
-    //}
+    //Terceira nave [2]
+    if(msg_len>0 && input_buffer[45] == 'b'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &pos_nave2);
+    }
+    //Quarta nave [3]
+    if(msg_len>0 && input_buffer[45] == 'c'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &pos_nave3);
+    }
 
     //Alvo x e y
     if(msg_len>0 && input_buffer[45] == '1'){
@@ -153,11 +148,15 @@ int main() {
   }
 
   //Criando a Nave
-  Nave *nave1 = new Nave(1);
-  Nave *nave2 = new Nave(1);
+  Nave *nave1 = new Nave(3);
+  Nave *nave2 = new Nave(3);
+  Nave *nave3 = new Nave(3);
+  Nave *nave4 = new Nave(3);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
   n_lista->add_nave(nave2);
+  n_lista->add_nave(nave3);
+  n_lista->add_nave(nave4);
 
   //Criando o alvo
   srand (time(NULL));
@@ -211,11 +210,11 @@ int main() {
     std::vector<Nave *> *n = n_lista->get_naves();
     (*n)[0]->update(pos_nave0);
     (*n)[1]->update(pos_nave1);
-    //(*n)[0]->update(pos_nave2);
-    //(*n)[0]->update(pos_nave3);
+    (*n)[2]->update(pos_nave2);
+    (*n)[3]->update(pos_nave3);
     alvo->update(alvo_x, alvo_y);
-      std::vector<Tiro *> *t = t_lista->get_tiros();
-    
+
+    std::vector<Tiro *> *t = t_lista->get_tiros();    
     for (int i = 0; i<50; i++){
       (*t)[i]->update(tiro_x[i], tiro_y[i], tiro_vel[i]);
       (*t)[i]->update_existe(tiro_existe[i]);

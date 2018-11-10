@@ -126,6 +126,24 @@ void Tela::update(int *total_tiros, int *pontos) {
             echochar(' ');
         }
      }
+
+     if (k==2){
+        y = POSICAO_Y_NAVE_2;
+        x = (int) ((*naves_old)[k]->get_posicao()) * (this->maxI / this->maxX);
+        move(y, x);
+        if (y<ALTURA_TELA && y>0){
+            echochar(' ');
+        }
+     }
+
+     if (k==3){
+        y = POSICAO_Y_NAVE_3;
+        x = (int) ((*naves_old)[k]->get_posicao()) * (this->maxI / this->maxX);
+        move(y, x);
+        if (y<ALTURA_TELA && y>0){
+            echochar(' ');
+        }
+     }
   }
   // Desenha a nave na tela
   std::vector<Nave *> *naves = this->lista_nave->get_naves();
@@ -151,6 +169,29 @@ void Tela::update(int *total_tiros, int *pontos) {
         // Atualiza a nave antiga
        (*naves_old)[k]->update((*naves)[k]->get_posicao());
      }
+
+     if(k==2){
+        y = POSICAO_Y_NAVE_2;
+        x = (int) ((*naves)[k]->get_posicao()) * (this->maxI / this->maxX);
+        move(y, x);
+        if (y<ALTURA_TELA && y>0){
+            echochar('V');
+        }
+        // Atualiza a nave antiga
+       (*naves_old)[k]->update((*naves)[k]->get_posicao());
+     }
+
+     if(k==3){
+        y = POSICAO_Y_NAVE_3;
+        x = (int) ((*naves)[k]->get_posicao()) * (this->maxI / this->maxX);
+        move(y, x);
+        if (y<ALTURA_TELA && y>0){
+            echochar('A');
+        }
+        // Atualiza a nave antiga
+       (*naves_old)[k]->update((*naves)[k]->get_posicao());
+     }
+
   }
 
 
