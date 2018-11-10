@@ -23,6 +23,9 @@ int socket_fd;
 
 //Variaveis de send e recv
 float pos_nave0;
+float pos_nave1;
+float pos_nave2;
+float pos_nave3;
 float alvo_x;
 float alvo_y;
 float deltaT_global;
@@ -50,13 +53,33 @@ void *receber_respostas(void *parametros) {
 
   while(1) {
     //A flag de qual informacao o buffer contem encontra-se na posicao 45
-
-    //Nave 0
     msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
+
+    //Primeira nave [0]
     if(msg_len>0 && input_buffer[45] == '0'){
       input_buffer[45] = ' ';
       sscanf(input_buffer,"%f", &pos_nave0);
     }
+
+    //Segunda nave [1]
+    if(msg_len>0 && input_buffer[45] == 'a'){
+      input_buffer[45] = ' ';
+      sscanf(input_buffer,"%f", &pos_nave1);
+    }
+
+    //Terceira nave
+    //msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
+    //if(msg_len>0 && input_buffer[45] == 'b'){
+     // input_buffer[45] = ' ';
+     // sscanf(input_buffer,"%f", &pos_nave2);
+    //}
+
+    //Quarta nave
+   // msg_len = recv(socket_fd, input_buffer, 50, MSG_DONTWAIT);
+    //if(msg_len>0 && input_buffer[45] == 'c'){
+    //  input_buffer[45] = ' ';
+    //  sscanf(input_buffer,"%f", &pos_nave3);
+    //}
 
     //Alvo x e y
     if(msg_len>0 && input_buffer[45] == '1'){
@@ -131,8 +154,10 @@ int main() {
 
   //Criando a Nave
   Nave *nave1 = new Nave(1);
+  Nave *nave2 = new Nave(1);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
+  n_lista->add_nave(nave2);
 
   //Criando o alvo
   srand (time(NULL));
@@ -185,6 +210,9 @@ int main() {
     //Atualizando os parametros que chegaram pelo recv
     std::vector<Nave *> *n = n_lista->get_naves();
     (*n)[0]->update(pos_nave0);
+    (*n)[1]->update(pos_nave1);
+    //(*n)[0]->update(pos_nave2);
+    //(*n)[0]->update(pos_nave3);
     alvo->update(alvo_x, alvo_y);
       std::vector<Tiro *> *t = t_lista->get_tiros();
     

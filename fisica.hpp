@@ -22,7 +22,7 @@ class Fisica {
     Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt);
     void add_nave(Nave *n);
     void add_tiro(Tiro *t);
-    void andar_nave(int deslocamento);
+    void andar_nave(int deslocamento, int i_nave);
     void disparar_tiro(int i_tiro, int *total_tiros);
     void update_tiro(float deltaT, int *pontos);
     void destruir_tiro(int i_tiro);

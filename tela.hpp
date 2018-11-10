@@ -8,7 +8,8 @@
 #define ACELERACAO_TIRO 0
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
-#define POSICAO_X_NAVE 3
+#define POSICAO_X_NAVE_0 3
+#define POSICAO_X_NAVE_1 17
 
 class Tela {
   private:

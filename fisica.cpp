@@ -21,10 +21,10 @@ Fisica::Fisica(Alvo *alvo, ListaDeNaves *ldn, ListaDeTiros *ldt) {
   }
 }
 
-void Fisica::andar_nave(int deslocamento) {
+void Fisica::andar_nave(int deslocamento, int i_nave) {
   std::vector<Nave *> *n = this->lista_nave->get_naves();
-  if ((*n)[0]->get_posicao() + deslocamento > 0 && (*n)[0]->get_posicao() + deslocamento < ALTURA_TELA) {
-    (*n)[0]->update((*n)[0]->get_posicao() + deslocamento);
+  if ((*n)[i_nave]->get_posicao() + deslocamento > 0 && (*n)[i_nave]->get_posicao() + deslocamento < ALTURA_TELA) {
+    (*n)[i_nave]->update((*n)[i_nave]->get_posicao() + deslocamento);
   }
 }
 

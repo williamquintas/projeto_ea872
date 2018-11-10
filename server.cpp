@@ -107,8 +107,10 @@ int main() {
 
   //Criando a Nave
   Nave *nave1 = new Nave(1);
+  Nave *nave2 = new Nave(1);
   ListaDeNaves *n_lista = new ListaDeNaves();
   n_lista->add_nave(nave1);
+  n_lista->add_nave(nave2);
 
 
   //Criando o alvo
@@ -175,12 +177,30 @@ int main() {
 
     for (int ret=0; ret<MAX_CONEXOES; ret++) {
        if (conexao_usada[ret] == 1) { //sem opcao de desconectar
+          //Jah usados: 0-9, a-c ([45])
 
-          //Mandando a posicao da primeira nave
           std::vector<Nave *> *n = n_lista->get_naves();
+          //Mandando a posicao da primeira nave
           sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
           output_buffer[45] = '0';
           send(connection_fd[ret], output_buffer, 50, 0);
+
+          //Mandando a posicao da segunda nave
+          sprintf(output_buffer, "%f", (*n)[1]->get_posicao());
+          output_buffer[45] = 'a';
+          send(connection_fd[ret], output_buffer, 50, 0);
+
+          //Mandando a posicao da terceira nave
+           //std::vector<Nave *> *n = n_lista->get_naves();
+           //sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
+           //output_buffer[45] = 'b';
+          // send(connection_fd[ret], output_buffer, 50, 0);
+
+          //Mandando a posicao da quarta nave
+          // std::vector<Nave *> *n = n_lista->get_naves();
+          // sprintf(output_buffer, "%f", (*n)[0]->get_posicao());
+          // output_buffer[45] = 'c';
+          // send(connection_fd[ret], output_buffer, 50, 0);
 
           //Mandando a posicao dos alvos
           sprintf(output_buffer, "%lf", alvo->get_posicao_x());
@@ -243,10 +263,10 @@ int main() {
             break;
           }
           if (input_teclado=='s') {
-            f->andar_nave(1);
+            f->andar_nave(1, user_iterator);
           }
           if (input_teclado=='w') {
-            f->andar_nave(-1);
+            f->andar_nave(-1, user_iterator);
           }
           if (input_teclado=='t') {
             if (n_tiro+1 == MAX_TIROS){
