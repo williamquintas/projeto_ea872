@@ -86,7 +86,7 @@ void Tela::update(int *total_tiros, int *pontos) {
      y = (int) ((*tiros_old)[k]->get_posicao_y()) * (this->maxI / this->maxX);
      x = (int) ((*tiros_old)[k]->get_posicao_x()) * (this->maxI / this->maxX);
      move(y, x);   /* Move cursor to position */
-     if (x<LARGURA_TELA && x>0){
+     if (x<LARGURA_TELA && x>0 && y<ALTURA_TELA && y>0){
          echochar(' ');  /* Prints character, advances a position */
      }
   }
@@ -97,7 +97,7 @@ void Tela::update(int *total_tiros, int *pontos) {
       y = (int) ((*tiros)[k]->get_posicao_y()) * (this->maxI / this->maxX);
       x = (int) ((*tiros)[k]->get_posicao_x()) * (this->maxI / this->maxX);
       move(y, x);   /* Move cursor to position */
-      if (x<LARGURA_TELA && x>0){
+      if (x<LARGURA_TELA && x>0 && y<ALTURA_TELA && y>0){
         echochar('*');  /* Prints character, advances a position */
       }
       // Atualiza tiros antigos

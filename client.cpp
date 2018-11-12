@@ -143,7 +143,7 @@ int main() {
   //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
   for (int k=1; k<MAX_TIROS; k++){
-    Tiro *tiro = new Tiro(0, 0, 0, 0);
+    Tiro *tiro = new Tiro(0, 0, 0, 0, 0);
     t_lista->add_tiro(tiro);
   }
 

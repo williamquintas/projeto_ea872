@@ -2,11 +2,12 @@
 #include <vector> 
 
 //Tiro
-Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, bool existe) {
+Tiro::Tiro(float posicao_x, float posicao_y, float velocidade, bool existe, int quem_atirou) {
   this->posicao_x = posicao_x;
   this->posicao_y = posicao_y;
   this->velocidade = velocidade;
   this->existe = existe;
+  this->quem_atirou = quem_atirou;
 }
 
 float Tiro::get_posicao_x() {
@@ -25,8 +26,16 @@ bool Tiro::get_existe() {
   return this->existe;
 }
 
+int Tiro::get_quem_atirou() {
+  return this->quem_atirou;
+}
+
 void Tiro::update_existe(bool e) {
   this->existe = e;
+}
+
+void Tiro::update_quem_atirou(int q) {
+  this->quem_atirou = q;
 }
 
 void Tiro::update(float nova_posicao_x, float nova_posicao_y, float nova_velocidade) {
@@ -46,7 +55,8 @@ void ListaDeTiros::hard_copy(ListaDeTiros *ldt) {
     Tiro *t = new Tiro( (*tiros)[k]->get_posicao_x(), 
                         (*tiros)[k]->get_posicao_y(), 
                         (*tiros)[k]->get_velocidade(), 
-                        (*tiros)[k]->get_existe()     );
+                        (*tiros)[k]->get_existe(),
+                        (*tiros)[k]->get_quem_atirou()     );
     this->add_tiro(t);
   }
 }

@@ -101,7 +101,7 @@ int main() {
   //Criando os tiros
   ListaDeTiros *t_lista = new ListaDeTiros();
   for (int k=1; k<MAX_TIROS; k++){
-    Tiro *tiro = new Tiro(0, 0, 0, 0);
+    Tiro *tiro = new Tiro(0, 0, 0, 0, 0);
     t_lista->add_tiro(tiro);
   }
 
@@ -274,7 +274,7 @@ int main() {
             }
             asample->set_position(0);
             player->play(asample);
-            f->disparar_tiro(n_tiro, &total_tiros);
+            f->disparar_tiro(n_tiro, &total_tiros, user_iterator);
             n_tiro++;
           }
         }

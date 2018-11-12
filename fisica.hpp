@@ -10,6 +10,9 @@
 #define ALTURA_TELA 20
 #define LARGURA_TELA 40
 #define POSICAO_X_NAVE_0 2
+#define POSICAO_X_NAVE_1 38
+#define POSICAO_Y_NAVE_2 1
+#define POSICAO_Y_NAVE_3 19
 
 #define MAX_X 38
 #define MIN_X 2
@@ -28,7 +31,7 @@ class Fisica {
     void add_nave(Nave *n);
     void add_tiro(Tiro *t);
     void andar_nave(int deslocamento, int i_nave);
-    void disparar_tiro(int i_tiro, int *total_tiros);
+    void disparar_tiro(int i_tiro, int *total_tiros, int quem_atirou);
     void update_tiro(float deltaT, int *pontos);
     void destruir_tiro(int i_tiro);
 };

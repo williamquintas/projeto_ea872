@@ -40,12 +40,28 @@ void Fisica::andar_nave(int deslocamento, int i_nave) {
 
 }
 
-void Fisica::disparar_tiro(int i_tiro, int *total_tiros){
+void Fisica::disparar_tiro(int i_tiro, int *total_tiros, int quem_atirou){
   (*total_tiros)++;
   std::vector<Nave *> *n = this->lista_nave->get_naves();
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   (*t)[i_tiro]->update_existe(1);
-  (*t)[i_tiro]->update(POSICAO_X_NAVE_0+2, (*n)[0]->get_posicao(), VELOCIDADE_TIRO);
+  (*t)[i_tiro]->update_quem_atirou(quem_atirou);
+  switch (quem_atirou){
+    case 0:
+    default:
+      (*t)[i_tiro]->update(POSICAO_X_NAVE_0+2, (*n)[0]->get_posicao(), VELOCIDADE_TIRO);
+      break;
+    case 1:
+      (*t)[i_tiro]->update(POSICAO_X_NAVE_1-2, (*n)[1]->get_posicao(), VELOCIDADE_TIRO);
+      break;
+    case 2:
+      (*t)[i_tiro]->update((*n)[2]->get_posicao(), POSICAO_Y_NAVE_2+1, VELOCIDADE_TIRO);
+      break;
+    case 3:
+      (*t)[i_tiro]->update((*n)[3]->get_posicao(), POSICAO_Y_NAVE_3-1, VELOCIDADE_TIRO);
+      break;
+  }
+  
 }
 
 void Fisica::destruir_tiro(int i_tiro){
@@ -60,8 +76,30 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   for (int i = 0; i < (*t).size(); i++) {
     float new_vel = (*t)[i]->get_velocidade() + (float)deltaT * (ACELERACAO_TIRO)/1000;
-    float new_pos = (*t)[i]->get_posicao_x() + (float)deltaT * new_vel/1000;
+    float new_pos;
+    switch ((*t)[i]->get_quem_atirou())
+    {
+      case 0:
+      default:
+        new_pos = (*t)[i]->get_posicao_x() + (float)deltaT * new_vel/1000;
+        (*t)[i]->update(new_pos, (*t)[i]->get_posicao_y(), new_vel);
+        break;
+      case 1:
+        new_pos = (*t)[i]->get_posicao_x() - (float)deltaT * new_vel/1000;
+        (*t)[i]->update(new_pos, (*t)[i]->get_posicao_y(), new_vel);
+        break;
+      case 2:
+        new_pos = (*t)[i]->get_posicao_y() + (float)deltaT * new_vel/1000;
+        (*t)[i]->update((*t)[i]->get_posicao_x(), new_pos, new_vel);
+        break;
+      case 3:
+        new_pos = (*t)[i]->get_posicao_y() - (float)deltaT * new_vel/1000;
+        (*t)[i]->update((*t)[i]->get_posicao_x(), new_pos, new_vel);
+        break;
+    }
     if (
+      (((*t)[i]->get_quem_atirou() == 0) ||
+      (*t)[i]->get_quem_atirou() == 1) &&
       new_pos <= this->alvo->get_posicao_x() + 0.5 && 
       new_pos >= this->alvo->get_posicao_x() - 0.5 && 
       (*t)[i]-> get_posicao_y() <= this->alvo->get_posicao_y() + 0.5 &&
@@ -72,6 +110,18 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
         this->alvo->update((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % (ALTURA_TELA - 1)) + 1.0);
         (*pontos)++;
     }
-    (*t)[i]->update(new_pos, (*t)[i]->get_posicao_y(), new_vel);
+    else if (
+      (((*t)[i]->get_quem_atirou() == 2) ||
+      (*t)[i]->get_quem_atirou() == 3) &&
+      new_pos <= this->alvo->get_posicao_y() + 0.5 && 
+      new_pos >= this->alvo->get_posicao_y() - 0.5 && 
+      (*t)[i]-> get_posicao_x() <= this->alvo->get_posicao_x() + 0.5 &&
+      (*t)[i]-> get_posicao_x() >= this->alvo->get_posicao_x() - 0.5
+      ) {
+        this->destruir_tiro(i);
+        srand (time(NULL));
+        this->alvo->update((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % (ALTURA_TELA - 1)) + 1.0);
+        (*pontos)++;
+    }
   }
 }
