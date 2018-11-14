@@ -51,7 +51,7 @@ void Tela::draw() {
   refresh();
 }
 
-void Tela::update(int *total_tiros, int *pontos) {
+void Tela::update(int *total_tiros, int *pontos1, int *pontos2, int *pontos3, int *pontos4) {
   int x, y;
   //para deixar do tamanho do terminal, trocar "altura_tela" por essa
   //int altura, largura;
@@ -199,7 +199,7 @@ void Tela::update(int *total_tiros, int *pontos) {
   // Atualizando os pontos e o restante de tiros
   int out_tiros = tiros->size()-(*total_tiros);
   move(ALTURA_TELA+1, 1);
-  printw("%d Tiros Restantes / %d Pontos", out_tiros, (*pontos));
+  printw("%d Tiros Restantes \n Jogador 1: %d pontos \n Jogador 2: %d pontos \n Jogador 3: %d pontos \n Jogador 4: %d pontos", out_tiros, (*pontos1), (*pontos2), (*pontos3), (*pontos4));
   // Atualiza tela
   refresh();
 }

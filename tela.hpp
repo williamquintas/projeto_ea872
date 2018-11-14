@@ -26,7 +26,7 @@ class Tela {
     void stop();
     void init();
     void draw();
-    void update(int *total_tiros, int *pontos);
+    void update(int *total_tiros, int *pontos1, int *pontos2, int *pontos3, int *pontos4);
 };
 
 #endif

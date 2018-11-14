@@ -29,7 +29,10 @@ float pos_nave3;
 float alvo_x;
 float alvo_y;
 float deltaT_global;
-int pontos;
+int pontos1;
+int pontos2;
+int pontos3;
+int pontos4;
 int total_tiros;
 int aux;
 
@@ -93,7 +96,7 @@ void *receber_respostas(void *parametros) {
     }
     if(msg_len>0 && input_buffer[45] == '4'){
       input_buffer[45] = ' ';
-      sscanf(input_buffer,"%d", &pontos);
+      sscanf(input_buffer,"%d %d %d %d", &pontos1, &pontos2, &pontos3, &pontos4);
     }
     if(msg_len>0 && input_buffer[45] == '5'){
       input_buffer[45] = ' ';
@@ -204,7 +207,7 @@ int main() {
     // Atualiza modelo
     //f->update_tiro(deltaT, &pontos);
     // Atualiza tela
-    tela->update(&total_tiros, &pontos);
+    tela->update(&total_tiros, &pontos1, &pontos2, &pontos3, &pontos4);
 
     //Atualizando os parametros que chegaram pelo recv
     std::vector<Nave *> *n = n_lista->get_naves();

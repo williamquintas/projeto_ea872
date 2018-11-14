@@ -36,7 +36,10 @@ int conexao_usada[MAX_CONEXOES];
 int running;
 
 int total_tiros = 0;
-int pontos = 0;
+int pontos1 = 0;
+int pontos2 = 0;
+int pontos3 = 0;
+int pontos4 = 0;
 
 /* Funcoes do servidor */
 int adicionar_conexao(int new_connection_fd) {
@@ -175,9 +178,9 @@ int main() {
     t1 = get_now_ms();
     deltaT = t1-t0;
     // Atualiza modelo
-    f->update_tiro(deltaT, &pontos);
+    f->update_tiro(deltaT, &pontos1, &pontos2, &pontos3, &pontos4);
     // Atualiza tela
-    tela->update(&total_tiros, &pontos);
+    tela->update(&total_tiros, &pontos1, &pontos2, &pontos3, &pontos4);
 
     for (int ret=0; ret<MAX_CONEXOES; ret++) {
        if (conexao_usada[ret] == 1) { //sem opcao de desconectar
@@ -215,7 +218,7 @@ int main() {
           output_buffer[45] = '3';
           send(connection_fd[ret], output_buffer, 50, 0);
 
-          sprintf(output_buffer, "%d", pontos);
+          sprintf(output_buffer, "%d %d %d %d", pontos1, pontos2, pontos3, pontos4);
           output_buffer[45] = '4';
           send(connection_fd[ret], output_buffer, 50, 0);
 

@@ -32,7 +32,7 @@ class Fisica {
     void add_tiro(Tiro *t);
     void andar_nave(int deslocamento, int i_nave);
     void disparar_tiro(int i_tiro, int *total_tiros, int quem_atirou);
-    void update_tiro(float deltaT, int *pontos);
+    void update_tiro(float deltaT, int *pontos1, int *pontos2, int *pontos3, int *pontos4);
     void destruir_tiro(int i_tiro);
 };
 

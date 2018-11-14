@@ -71,7 +71,7 @@ void Fisica::destruir_tiro(int i_tiro){
   this->player->play(this->asample);    
 }
 
-void Fisica::update_tiro(float deltaT, int *pontos) {
+void Fisica::update_tiro(float deltaT, int *pontos1, int *pontos2, int *pontos3, int *pontos4) {
   // Atualiza parametros dos tiros!
   std::vector<Tiro *> *t = this->lista_tiro->get_tiros();
   for (int i = 0; i < (*t).size(); i++) {
@@ -108,7 +108,8 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
         this->destruir_tiro(i);
         srand (time(NULL));
         this->alvo->update((float)(rand() % (LARGURA_TELA - 5) + 3.0), (float)(rand() % (ALTURA_TELA - 5)) + 3.0);
-        (*pontos)++;
+        if ((*t)[i]->get_quem_atirou() == 0)  (*pontos1)++;
+        else (*pontos2)++;
     }
     else if (
       (((*t)[i]->get_quem_atirou() == 2) ||
@@ -121,7 +122,8 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
         this->destruir_tiro(i);
         srand (time(NULL));
         this->alvo->update((float)(rand() % (LARGURA_TELA - 5) + 3.0), (float)(rand() % (ALTURA_TELA - 5)) + 3.0);
-        (*pontos)++;
+        if ((*t)[i]->get_quem_atirou() == 2)  (*pontos3)++;
+        else (*pontos4)++;
     }
   }
 }
