@@ -184,28 +184,21 @@ int main() {
   player->init();
 
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  // printf("Socket criado\n");
 
   target.sin_family = AF_INET;
   target.sin_port = htons(3001);
   inet_aton("127.0.0.1", &(target.sin_addr));
-  // printf("Tentando conectar\n");
   if (connect(socket_fd, (struct sockaddr*)&target, sizeof(target)) != 0) {
-    // printf("Problemas na conexao\n");
     return 0;
   }
-  // printf("Conectei ao servidor\n");
 
   pthread_create(&receiver, NULL, receber_respostas, NULL);
 
   //Colocando os vetores naves em uma variavel auxiliar
-  //std::vector<Nave *> *n = n_lista->get_naves();
 
   float deltaT = deltaT_global;
 
   while(1) {
-    // Atualiza modelo
-    //f->update_tiro(deltaT, &pontos);
     // Atualiza tela
     tela->update(&total_tiros, &pontos1, &pontos2, &pontos3, &pontos4);
 
@@ -227,7 +220,6 @@ int main() {
     std::this_thread::sleep_for (std::chrono::milliseconds(10));
     if(c=='q'||c=='w'||c=='t'||c=='s'){
       send(socket_fd, &c, 1, 0);
-      //printw("Escrevi mensagem de %c!\n",c);
       if (c=='q') {
         break;
       }
