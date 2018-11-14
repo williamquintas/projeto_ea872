@@ -69,9 +69,7 @@ void *wait_connections(void *parameters) {
     conn_fd = accept(socket_fd, (struct sockaddr*)&client, &client_size);
     user_id = adicionar_conexao(conn_fd);
     if (user_id != -1) {
-      // printf("Novo usuario chegou! ID=%d\n", user_id);
     } else {
-      // printf("Maximo de usuarios atingido!\n");
     }
   }
   return NULL;
@@ -156,18 +154,13 @@ int main() {
 
   /* socket, bind, listen */
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  // printf("Socket criado\n");
   myself.sin_family = AF_INET;
   myself.sin_port = htons(3001);
   inet_aton("127.0.0.1", &(myself.sin_addr));
-  // printf("Tentando abrir porta 3001\n");
   if (bind(socket_fd, (struct sockaddr*)&myself, sizeof(myself)) != 0) {
-    // printf("Problemas ao abrir porta\n");
     return 0;
   }
-  // printf("Abri porta 3001!\n");
   listen(socket_fd, 2);
-  // printf("Estou ouvindo na porta 3001!\n");
 
   /* Dispara thread para ouvir conexoes */
   pthread_create(&esperar_conexoes, NULL, wait_connections, NULL);
@@ -184,7 +177,6 @@ int main() {
 
     for (int ret=0; ret<MAX_CONEXOES; ret++) {
        if (conexao_usada[ret] == 1) { //sem opcao de desconectar
-          //Jah usados: 0-9, a-c ([45])
 
           std::vector<Nave *> *n = n_lista->get_naves();
           //Mandando a posicao da primeira nave
@@ -258,7 +250,6 @@ int main() {
       if (conexao_usada[user_iterator] == 1) {
         msglen = recv(connection_fd[user_iterator], &input_teclado, 1, MSG_DONTWAIT);
         if (msglen > 0) {
-          // printf("Recebi mensagem de %d\n", user_iterator);
           // Lê o teclado
           if (input_teclado=='q') {
             running = 0;
@@ -282,12 +273,11 @@ int main() {
           }
         }
       }
-    //estava aqui o sleep
     }
     std::this_thread::sleep_for (std::chrono::milliseconds(100));
   }
-
-  // printf("Encerrando server...\n");
+ 
+  //Encerrando
   for (user_iterator=0; user_iterator<MAX_CONEXOES; user_iterator++)
     remover_conexao(user_iterator);
   
