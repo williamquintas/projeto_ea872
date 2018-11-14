@@ -107,7 +107,7 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
       ) {
         this->destruir_tiro(i);
         srand (time(NULL));
-        this->alvo->update((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % (ALTURA_TELA - 1)) + 1.0);
+        this->alvo->update((float)(rand() % (LARGURA_TELA - 5) + 3.0), (float)(rand() % (ALTURA_TELA - 5)) + 3.0);
         (*pontos)++;
     }
     else if (
@@ -120,7 +120,7 @@ void Fisica::update_tiro(float deltaT, int *pontos) {
       ) {
         this->destruir_tiro(i);
         srand (time(NULL));
-        this->alvo->update((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % (ALTURA_TELA - 1)) + 1.0);
+        this->alvo->update((float)(rand() % (LARGURA_TELA - 5) + 3.0), (float)(rand() % (ALTURA_TELA - 5)) + 3.0);
         (*pontos)++;
     }
   }

@@ -119,7 +119,7 @@ int main() {
 
   //Criando o alvo
   srand (time(NULL));
-  Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA/2) + LARGURA_TELA/2), (float)(rand() % ALTURA_TELA));
+  Alvo *alvo = new Alvo((float)(rand() % (LARGURA_TELA - 5) + 3.0), (float)(rand() % (ALTURA_TELA - 5)) + 3.0);
 
   //Crinado a Tela
   Fisica *f = new Fisica(alvo, n_lista, t_lista);
